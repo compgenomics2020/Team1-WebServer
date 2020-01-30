@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Analyze</title>
+  </head>
+  <body>
+    {% extends "template.html" %}
+    {% block content %}
+  <div class="container" align="center" style="padding:50px">
+      <strong>
+          <p style="text-align:center; font-size=40px;">Upload a sequence file in FASTA format here:</p>
+      </strong>
+      <form action="./upload_sequence.py">
+          <input type="file" id="myFile" name="filename">
+          <input type="submit">
+      </form>
+
+  </div>
+  <div class="container" align="center">
+      <strong>
+          <p style="text-align:center; font-size=40px;">Or search for a SRA accession:</p>
+      </strong>
+      <form action="./search_sra.py">
+          <input type="text" id="sra" name="sra_accession">
+          <input type="submit">
+      </form>
+
+  </div>
+    {% endblock %}
+  </body>
+</html>
