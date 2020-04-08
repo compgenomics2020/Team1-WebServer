@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Genome Assembly</title>
+  </head>
+  <body>
+
+<h3><center>GENOME ASSEMBLY</center></h3>    
+  <div class="container">
+      <strong>
+          <p font-size=40px;">FASTQ file upload (read 1)</p>
+      </strong>
+      <form action="./upload_sequence.py">
+          <input type="file" id="myFile" name="filename">
+          
+      </form>
+
+  </div>
+  <div class="container">
+      <strong>
+          <p font-size=40px;">FASTQ file upload (read 2)</p>
+      </strong>
+      <form action="./upload_sequence.py">
+          <input type="file" id="myFile" name="filename">
+          
+      </form>
+
+  </div>
+  <div class="container">
+	  <form action="">
+	  	<h4>Tools</h4>
+		  <input type="checkbox" id="tools1" name="unicycler" value="gene_assembly">
+		  <label for="tools1">Unicycler</label><br>
+		  <input type="checkbox" id="tools2" name="spades" value="gene_assembly">
+		  <label for="tools2">Spades</label><br>
+		 
+	</form>
+<div>
+	 <h5>Trim reads</h5>
+
+	<select id="choice">
+	  <option value="yes">Yes</option>
+	  <option value="no">No</option>
+	</select>
+</div> 
+
+  <div class="container">
+     
+     <form action="">
+     <h5>Email</h5>
+  	
+  	<input type="text" id="email" name="email"><br><br>
+  	<h5>Kmer size</h5>
+  
+  	<input type="text" id="kmer" name="kmer"><br><br>
+
+  	<h5>Output file name</h5>
+  	
+  	<input type="text" id="output" name="output"><br><br>
+  	<input type="submit" value="Submit">
+     
+</form>
+
+  </div>
+    
+  </body>
+</html>
