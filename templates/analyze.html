@@ -2,31 +2,50 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Analyze</title>
+    <title>General Analyze</title>
   </head>
+
   <body>
-    {% extends "template.html" %}
-    {% block content %}
+    <div class="tophead">
+      <iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=auto src="template.html" width="100%"  height="auto">
+    </iframe>
+   </div>
+
+  <div class="header">
+    <h2>Analyze</h2>
+  </div>
+
+
   <div class="container" align="center" style="padding:50px">
       <strong>
-          <p style="text-align:center; font-size=40px;">Upload a sequence file in FASTA format here:</p>
+          <p style="text-align:center; font-size=40px;">Upload a sequence file (read 1) in FASTQ format here:</p>
       </strong>
       <form action="./upload_sequence.py">
           <input type="file" id="myFile" name="filename">
-          <input type="submit">
       </form>
 
   </div>
+  <div class="container" align="center" style="padding:50px">
+      <strong>
+          <p style="text-align:center; font-size=40px;">Upload a sequence file (read 2) in FASTQ format here:</p>
+      </strong>
+      <form action="./upload_sequence.py">
+          <input type="file" id="myFile" name="filename">
+      </form>
+
+  </div>
+
   <div class="container" align="center">
       <strong>
-          <p style="text-align:center; font-size=40px;">Or search for a SRA accession:</p>
+          <p style="text-align:center; font-size=40px;"> Email:</p>
       </strong>
-      <form action="./search_sra.py">
-          <input type="text" id="sra" name="sra_accession">
-          <input type="submit">
+          <input type="text" id="email" name="emailaddress">
       </form>
 
+  <div class="buttom">
+    <br>
+    <button type="submit" class="btn btn-success">Start Assembling</button>
   </div>
-    {% endblock %}
+
   </body>
 </html>
