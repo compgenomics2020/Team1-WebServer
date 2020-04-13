@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel ="stylesheet" href = "../static/template.css">
+    <link rel="icon" href="https://img.icons8.com/color/96/000000/bacteria.png" />
+    <title>Comparative Genomics</title>
+
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <h1  style="color: white; font-size: 80px;" align="center">ECHO</h1>
+      <a href="./home.html" >Home</a>
+      <a href="./team.html" >Team</a>
+      <div class="dropdown">
+          <button class="dropbtn">Analyze
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="dropdown-content">
+                <a href="../analyze.html" >General Pipeline</a>
+                <a href="./genome_assembly.html" target="_parent">Genome Assembly</a>
+                <a href="./genome_prediction.html" target="_parent">Gene Prediction</a>
+                <a href="./functional_annotation.html" target="_parent">Functional Annotation</a>
+                <a href="./comparative_genomics.html" target="_parent">Comparative Genomics</a>
+            </div>
+        </div>
+      <a href="https://compgenomics2020.biosci.gatech.edu/Main_Page" target="_parent">Wiki</a>
+    </div>
+
+
+<!--     <div class="tophead">
+      <iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=auto src="../template.html" width="100%"  height="auto">
+    </iframe>
+   </div>
+ -->
+
+  <div>
+    <h1 class="page-title"> Comparative Genomics </h1>
+  </div>
+
+  <div class="container">
+      <strong>
+          <p font-size=40px;>Input file</p>
+      </strong>
+      <form action="./upload_sequence.py">
+          <input type="file" id="myFile" name="filename">
+
+      </form>
+
+  </div>
+
+  <div class="container">
+     <strong>
+      <form action="/action_page.php">
+  	<h5>Email</h5>
+  	<input type="text" id="fname" name="fname"><br><br>
+  	<h5>Output file name</h5>
+  	<input type="text" id="lname" name="lname"><br><br>
+  	<input type="submit" value="Submit">
+</strong>
+</form>
+
+  </div>
+
+  </body>
+</html>

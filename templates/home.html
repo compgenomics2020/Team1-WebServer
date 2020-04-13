@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" >
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel ="stylesheet" href = "static/template.css">
+    <link rel="icon" href="https://img.icons8.com/color/96/000000/bacteria.png" />
     <style>
       ul {
         list-style-type: none;
@@ -16,77 +20,40 @@
       li a {
         padding: 20px;
       }
-	    body {
-        font-family: Arial, Helvetica, sans-serif;
+
+      .box{
+        border:4px; 
+        border-radius: 15px 50px 15px;
+        border-style:solid; 
+        /*border-color:#2a9df4; */
+        border-color:#3abfbf;
+        /*background-color: #187bcd;*/
+        /*background-color: #ade6e6;*/
+        background-color: #72d4d4;
+        /*background-color: #83A2F6;*/
+        /*border-collapse: separate;
+        border-spacing: 15px 50px;*/
+        margin:20px auto; 
+        /*width:25%;*/
+        width: 500px;
+        height: 100px;
+        padding: 20px 0;
       }
 
-      .navbar {
-        background-image: url('https://cdn.mos.cms.futurecdn.net/kJjwg4h2ULvghvsHFT62HU-650-80.jpg');
-        overflow: hidden;
-        font-family: Arial;
-      }
-
-      /* Links inside the navbar */
-      .navbar a {
-        float: left;
-        font-size: 16px;
-        color: white;
+      .step{
         text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
+        font-family: "Cambria";
+        font-size: 24px;
+        color: #fffaf0;
+        /*color: #add8e6;*/
       }
 
-      /* The dropdown container */
-      .dropdown {
-        float: left;
-        overflow: visible;
-      }
-
-      /* Dropdown button */
-      .dropdown .dropbtn {
-        font-size: 16px;
-        border: none;
-        outline: none;
-        color: white;
-        padding: 14px 16px;
-        background-color: inherit;
-        font-family: inherit; /* Important for vertical align on mobile phones */
-        margin: 0; /* Important for vertical align on mobile phones */
-      }
-
-      /* Add a red background color to navbar links on hover */
-      .navbar a:hover, .dropdown:hover .dropbtn {
-        background-color: red;
-      }
-      .dropdown-content {
-        overflow: visible;
-        position:fixed; z-index:9999;
-        display: none;
-        position: absolute;
-        background-color: #f9f9f9;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-      }
-
-      /* Links inside the dropdown */
-      .dropdown-content a {
-        float: none;
-        color: black;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-        text-align: left;
-      }
-
-      /* Add a grey background color to dropdown links on hover */
-      .dropdown-content a:hover {
-        background-color: #ddd;
-      }
-
-      /* Show the dropdown menu on hover */
-      .dropdown:hover .dropdown-content {
-        display: block;
+      .explain{
+        text-align: center;
+        font-family: "Cambria";
+        font-size: 18px;
+        /*color: #ade6e6;*/
+        color:#d4f2f2;
       }
 
     </style>
@@ -94,54 +61,57 @@
     <meta charset="utf-8">
 
     <title>Home</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <!--     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> -->
   </head>
   
   <body>
+    
     <div class="navbar">
-    <h1  style="color: white; font-size: 80px;" align="center">ECHO</h1>
-    <a href="/" >Home</a>
-    <a href="/team" >Team</a>
-    <div class="dropdown">
-      <button class="dropbtn">Analyze
-        <i class="fa fa-caret-down"></i>
-      </button>
+      <h1  style="color: white; font-size: 80px;" align="center">ECHO</h1>
+      <a href="./home.html" >Home</a>
+      <a href="./team.html" >Team</a>
+      <div class="dropdown">
+          <button class="dropbtn">Analyze
+            <i class="fa fa-caret-down"></i>
+          </button>
           <div class="dropdown-content">
-                <a href="/analyze" >General Pipeline</a>
-                <a href="/genomeassembly" target="_parent">Genome Assembly</a>
-                <a href="/geneprediction" target="_parent">Genome Prediction</a>
-                <a href="/functionalannotation" target="_parent">Functional Annotation</a>
-                <a href="/comparativegenomics" target="_parent">Comparative Genomics</a>
-              </div>
+                <a href="./analyze.html" >General Pipeline</a>
+                <a href="./individual_pages/genome_assembly.html" target="_parent">Genome Assembly</a>
+                <a href="./individual_pages/genome_prediction.html" target="_parent">Gene Prediction</a>
+                <a href="./individual_pages/functional_annotation.html" target="_parent">Functional Annotation</a>
+                <a href="./individual_pages/comparative_genomics.html" target="_parent">Comparative Genomics</a>
             </div>
-            <li><a href="https://compgenomics2020.biosci.gatech.edu/Main_Page" target="_parent">Wiki</a></li>
-</div>
-   </div>
+        </div>
+        <a href="https://compgenomics2020.biosci.gatech.edu/Main_Page" target="_parent">Wiki</a>
+    </div>
+    
+    <div>
+      <h1 class="page-title"> Analysis Pipeline </h1>
+    </div>
 
-    <div class="jumbotron text-center">
-      <h3>PIPELINE SECTIONS</h3>
-    <p>
-      <h5 style="border:4px; border-style:solid; border-color:#00008B; background-color: #008080;margin:auto; width:50%;padding: 1em;"><div class="box blue">GENOME ASSEMBLY</div></h5>
-      <p>
+    <div class="pipeline">
 
-          Utilizing optimal tools to convert raw sequence data to assembled genome sequences
+      <div class="box">
+        <p><h1 class="step">I. Genome Assembly</h1></p>
+        <p class="explain">align and merge raw reads to contigs</p>
+      </div>
 
-      </p>
+      <div class="box">
+        <p><h1 class="step">II. Gene Prediction</h1></p>
+        <p class="explain">identify regions of the genomic DNA that encode genes</p>
+      </div>
 
-      <h5 style="border:4px; border-style:solid; border-color:#00008B; background-color: #008080;margin:auto; width:50%;padding: 1em;">GENE PREDICTION</h5>
-      <p>
-        Identifying regions of the genomic DNA that encodes genes
-      </p>
-      <h5 style="border:4px; border-style:solid; border-color:#00008B; background-color: #008080;margin:auto; width:50%;padding: 1em;">FUNCTIONAL ANNOTATION </h5>
-      <p>
-        Obtaining functional (biochemical functions, biological functions, expression, regulation and interaction) information of the genome
-      </p>
-      <h5 style="border:4px; border-style:solid; border-color:#00008B; background-color: #008080;margin:auto; width:50%;padding: 1em;">COMPARATIVE GENOMICS</h5>
-      <p>
-        Comparison of genome features of different organisms
-      </p>
-    </p>
+      <div class="box">
+        <p><h1 class="step">III. Function Annotation</h1></p>
+        <p class="explain">obtain functional information of the genome</p>
+      </div>
+
+      <div class="box">
+        <p><h1 class="step">IV. Comparative Genomics</h1></p>
+        <p class="explain">compare genome features of different organisms</p>
+      </div>
 
     </div>
+
   </body>
 </html>

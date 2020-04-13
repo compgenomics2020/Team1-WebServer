@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel ="stylesheet" href = "static/template.css">
+    <link rel="icon" href="https://img.icons8.com/color/96/000000/bacteria.png" />
     <style>
       ul {
         list-style-type: none;
@@ -20,103 +24,35 @@
         font-family: Arial, Helvetica, sans-serif;
       }
 
-      .navbar {
-        background-image: url('https://cdn.mos.cms.futurecdn.net/kJjwg4h2ULvghvsHFT62HU-650-80.jpg');
-        overflow: hidden;
-        font-family: Arial;
-      }
-
-      /* Links inside the navbar */
-      .navbar a {
-        float: left;
-        font-size: 16px;
-        color: white;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-      }
-
-      /* The dropdown container */
-      .dropdown {
-        float: left;
-        overflow: visible;
-      }
-
-      /* Dropdown button */
-      .dropdown .dropbtn {
-        font-size: 16px;
-        border: none;
-        outline: none;
-        color: white;
-        padding: 14px 16px;
-        background-color: inherit;
-        font-family: inherit; /* Important for vertical align on mobile phones */
-        margin: 0; /* Important for vertical align on mobile phones */
-      }
-
-      /* Add a red background color to navbar links on hover */
-      .navbar a:hover, .dropdown:hover .dropbtn {
-        background-color: red;
-      }
-      .dropdown-content {
-        overflow: visible;
-        position:fixed; z-index:9999;
-        display: none;
-        position: absolute;
-        background-color: #f9f9f9;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-      }
-
-      /* Links inside the dropdown */
-      .dropdown-content a {
-        float: none;
-        color: black;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-        text-align: left;
-      }
-
-      /* Add a grey background color to dropdown links on hover */
-      .dropdown-content a:hover {
-        background-color: #ddd;
-      }
-
-      /* Show the dropdown menu on hover */
-      .dropdown:hover .dropdown-content {
-        display: block;
-      }
-
     </style>
     <meta charset="utf-8">
     <title>General Analyze</title>
   </head>
 
   <body>
+    
     <div class="navbar">
-    <h1  style="color: white; font-size: 80px;" align="center">ECHO</h1>
-    <a href="/" >Home</a>
-    <a href="/team" >Team</a>
-    <div class="dropdown">
-      <button class="dropbtn">Analyze
-        <i class="fa fa-caret-down"></i>
-      </button>
+      <h1  style="color: white; font-size: 80px;" align="center">ECHO</h1>
+      <a href="./home.html" >Home</a>
+      <a href="./team.html" >Team</a>
+      <div class="dropdown">
+          <button class="dropbtn">Analyze
+            <i class="fa fa-caret-down"></i>
+          </button>
           <div class="dropdown-content">
-                <a href="/analyze" >General Pipeline</a>
-                <a href="/genomeassembly" target="_parent">Genome Assembly</a>
-                <a href="/geneprediction" target="_parent">Genome Prediction</a>
-                <a href="/functionalannotation" target="_parent">Functional Annotation</a>
-                <a href="/comparativegenomics" target="_parent">Comparative Genomics</a>
-              </div>
+                <a href="./analyze.html" >General Pipeline</a>
+                <a href="./individual_pages/genome_assembly.html" target="_parent">Genome Assembly</a>
+                <a href="./individual_pages/genome_prediction.html" target="_parent">Gene Prediction</a>
+                <a href="./individual_pages/functional_annotation.html" target="_parent">Functional Annotation</a>
+                <a href="./individual_pages/comparative_genomics.html" target="_parent">Comparative Genomics</a>
             </div>
-            <li><a href="https://compgenomics2020.biosci.gatech.edu/Main_Page" target="_parent">Wiki</a></li>
+        </div>
+        <a href="https://compgenomics2020.biosci.gatech.edu/Main_Page" target="_parent">Wiki</a>
     </div>
-   </div>
 
-  <div class="header">
-    <h2>Analyze</h2>
+
+  <div>
+    <h1 class="page-title"> General Pipeline </h1>
   </div>
 
 
