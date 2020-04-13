@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from os.path import isfile, join
 from os import listdir
 import subprocess
