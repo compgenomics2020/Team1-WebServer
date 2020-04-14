@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+h1 {
+    background-color: black;
+    font-color: white;
+    style="font-size: 20px;"
+
+   }
+
+=======
 body {
 font-family: Arial, Helvetica, sans-serif;
 }
@@ -87,3 +96,4 @@ a:visited{
 text-decoration: none;
 }
 
+>>>>>>> d1682ab22b643a2473ff11ae790f475e59b0736e
