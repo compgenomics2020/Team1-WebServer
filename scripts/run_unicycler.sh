@@ -30,7 +30,7 @@ if ((verbose)); then
         echo "\nMaking output directory\n"
 fi
 
-mkdir ${outputFolder}
+mkdir -p ${outputFolder}
 
 if ((verbose)); then
         echo "\nStarted genome assembly\n"
