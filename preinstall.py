@@ -13,4 +13,5 @@ subprocess.call(["conda", "install", "-c", "bioconda/label/cf201901", "java-jdk"
 subprocess.call(["conda", "install", "-c", "bioconda", "unicycler"])
 subprocess.call(["conda", "install", "-c", "bioconda", "prodigal"])
 subprocess.call(["conda", "install", "-c", "conda-forge", "yagmail"])
+subprocess.call(["conda", "install", "-c", "anaconda", "keyring"])
 
