@@ -66,9 +66,6 @@ class Pipeline:
         output = subprocess.check_output([f"{cwd}scripts/run_unicycler.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-m", "/home/projects/group-a/bin/miniconda3/bin/unicycler", "-v"])
         quast_output = subprocess.check_output([f"{cwd}scripts/run_quast.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-q", "/home/projects/group-a/bin/miniconda3/bin/quast.py", "-v"])
 
-        #TODO: remove absolute path 
-        #import pdb; pdb.set_trace()
-        output = subprocess.check_output([f"{cwd}scripts/run_unicycler.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-m", "/home/projects/group-a/bin/miniconda3/bin/unicycler", "-v"])
         log_file.write(output)
         log_file.close()
         return output

@@ -25,6 +25,17 @@ get_input () {
 }
 
 
+quality_control () {
+        if ((verbose)); then
+                echo "\nExecuting quality control and trimming\nCreating folders for output:"
+        fi
+        mkdir ${outputFolder}/fastp_outputs
+        mkdir ${outputFolder}/trimmed_reads
+        ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa mkdir ${outputFolder}/fastp_outputs/gwa_report
+        ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${fastp_path} -w ${threads} -i ${pathToInputFiles}/gwa_1.fq.gz -I ${pathToInputFiles}/gwa_2.fq.gz -5 -3 -W 10 -M 22 -c -o ${outputFolder}/trimmed_reads/gwa_trim_1.fq.gz --out2 ${outputFolder}/trimmed_reads/gwa_trim_2.fq.gz -j ${outputFolder}/fastp_outputs/gwa_report/fastp.json -h ${outputFolder}/fastp_outputs/gwa_report/fastp.html
+}
+
+
 get_input "$@"
 if ((verbose)); then
         echo "\nMaking output directory\n"
