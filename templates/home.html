@@ -13,14 +13,6 @@
         font-color:blue
       }
 
-      li {
-        display: inline;
-      }
-
-      li a {
-        padding: 20px;
-      }
-
       .box{
         border:4px; 
         border-radius: 15px 50px 15px;
@@ -56,6 +48,29 @@
         color:#d4f2f2;
       }
 
+      .page-title a:link{
+      text-decoration: none;
+      color: black;
+    }
+
+      .page-title a:visited{
+        text-decoration: none;
+        color: black;
+      }
+
+      .page-title a:hover{
+        color:#72d4d4;
+      }
+
+      .box h1:hover{
+        color:#288484;
+      }
+
+      .explain:hover{
+        color:#288484;
+
+      }
+
     </style>
 
     <meta charset="utf-8">
@@ -83,31 +98,37 @@
             </div>
         </div>
         <a href="https://compgenomics2020.biosci.gatech.edu/Main_Page" target="_parent">Wiki</a>
-      <a href="class_results.html" target="_parent">Class results</a>
+        <a href="class_results.html" target="_parent">Class results</a>
     </div>
     
-    <div>
-      <h1 class="page-title"> Analysis Pipeline </h1>
+    <div class="page-title">
+      <a href="./analyze.html" >
+      <h1> Analysis Pipeline </h1>
+    </a>
     </div>
 
     <div class="pipeline">
-
+      <a href="./individual_pages/genome_assembly.html" target="_parent">
       <div class="box">
         <p><h1 class="step">I. Genome Assembly</h1></p>
         <p class="explain">align and merge raw reads to contigs</p>
       </div>
+    </a>
 
       <div class="box">
+        <a href="./individual_pages/genome_prediction.html" target="_parent">
         <p><h1 class="step">II. Gene Prediction</h1></p>
         <p class="explain">identify regions of the genomic DNA that encode genes</p>
       </div>
 
       <div class="box">
+        <a href="./individual_pages/functional_annotation.html" target="_parent">
         <p><h1 class="step">III. Function Annotation</h1></p>
         <p class="explain">obtain functional information of the genome</p>
       </div>
 
       <div class="box">
+        <a href="./individual_pages/comparative_genomics.html" target="_parent">
         <p><h1 class="step">IV. Comparative Genomics</h1></p>
         <p class="explain">compare genome features of different organisms</p>
       </div>
