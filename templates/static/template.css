@@ -97,3 +97,8 @@ text-decoration: none;
 }
 
 >>>>>>> d1682ab22b643a2473ff11ae790f475e59b0736e
+input{
+  vertical-align: middle;
+  position: relative;
+  bottom: 1px;
+}

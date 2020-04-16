@@ -10,7 +10,7 @@
     <title>Gene Prediction</title>
   </head>
   <body>
-
+    
     <div class="navbar">
       <h1  style="color: white; font-size: 80px;" align="center">ECHO</h1>
       <a href="../home.html" >Home</a>
@@ -28,6 +28,7 @@
             </div>
         </div>
       <a href="https://compgenomics2020.biosci.gatech.edu/Main_Page" target="_parent">Wiki</a>
+    <a href="class_results.html" target="_parent">Class results</a>
     </div>
 
 <!--     <div class="tophead">
@@ -42,7 +43,7 @@
   </div>
 
 
-  <div class="container">
+  <div class="container" align="center" style="padding:50px">
       <strong>
           <p font-size=40px;>FASTA file upload</p>
       </strong>
@@ -53,20 +54,21 @@
 
   </div>
 
-  <div class="container">
-	  <form action="">
-	  	<h4>Alternative Tools (Default: CDS - Prodigal, tRNA - Aragorn, rRNA - barrnap)</h4>
-		  <input type="checkbox" id="tools1" name="GMS2" value="gene_prediction">
-		  <label for="tools1">GeneMarkS-2</label><br>
+  <div class="container" align="center" style="padding:0px">
+	 
+    <h4>Alternative Tools<br/>(Default: CDS - Prodigal, tRNA - Aragorn, rRNA - barrnap)</h4>
+        <form action="">
+		  <input type="checkbox" id="tools1" name="GMS2" value="gene_prediction" >
+		  <label for="tools1">GeneMarkS-2 (CDS)</label>
 		  <input type="checkbox" id="tools2" name="tRNA" value="gene_prediction">
-		  <label for="tools2">tRNAScan-SE (tRNA)</label><br>
+		  <label for="tools2">tRNAScan-SE (tRNA)</label>
 		  <input type="checkbox" id="tools2" name="RNA" value="gene_prediction">
-		  <label for="tools2">RNAmmer (rRNA)</label><br>
+		  <label for="tools2">RNAmmer (rRNA)</label>
 
 	</form>
 <div>
 
-  <div class="container">
+  <div class="container" align="center" style="padding:50px">
      <strong>
       <form action="/action_page.php">
   	<h5>Email</h5>
