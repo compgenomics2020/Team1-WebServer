@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
 import os
+import glob
 import subprocess
 import tempfile
 import sys
 import argparse
 import yagmail
+import shutil
 
 class Pipeline:
     """
@@ -58,10 +60,15 @@ class Pipeline:
 	# run unicycler
         self.output_path_assembly =f'{self.tmp_folder}'
         log_file = open(f'{self.tmp_folder}/genomeAssemblyLog.txt','w+')
+
 	#TODO: remove absolute path 
 	#import pdb; pdb.set_trace()
         output = subprocess.check_output([f"{cwd}scripts/run_unicycler.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-m", "/home/projects/group-a/bin/miniconda3/bin/unicycler", "-v"])
         quast_output = subprocess.check_output([f"{cwd}scripts/run_quast.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-q", "/home/projects/group-a/bin/miniconda3/bin/quast.py", "-v"])
+
+        #TODO: remove absolute path 
+        #import pdb; pdb.set_trace()
+        output = subprocess.check_output([f"{cwd}scripts/run_unicycler.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-m", "/home/projects/group-a/bin/miniconda3/bin/unicycler", "-v"])
         log_file.write(output)
         log_file.close()
         return output
@@ -94,29 +101,42 @@ class Results:
         self.tmp_folder = tmp_folder
         self.job_id = tmp_folder.split('/')[-1]
         self.user_email = user_email
-        self.assembly_log = f'{self.tmp_folder}/genomeAssemblyLog.txt'
-        self.gene_prediction_log = f'{self.tmp_folder}/genePredictionLog.txt'
-        files_to_zip = [self.assembly_log, self.gene_prediction_log]
-        zipped_files = zipfile.Zipfile(f"{self.tmp_folder}/log_files.zip", 'w+')
-        for f in files_to_zip:
-            zipped_files.write(f, compress_type = zipfile.ZIP_DEFLATED)
+        self.files_to_send = []
+        #import pdb; pdb.set_trace()
+        if os.path.isfile(f'{self.tmp_folder}/assembly_statistics.txt'):
+            self.files_to_send.append(f'{self.tmp_folder}/genomeAssemblyLog.txt')
+        if len(glob.glob(f'{self.tmp_folder}/*.gff')) >= 1:
+             predictions = glob.glob(f'{self.tmp_folder}/*.gff')
+             self.extract_gene_prediction_statistics(predictions)
+             self.files_to_send.append(f"{self.tmp_folder}/gene_prediction_statistics.txt")
+        #self.zipped_files = zipfile.ZipFile(f"{self.tmp_folder}/log_files.zip", 'a')
+        #for f in files_to_zip:
+        #    self.zipped_files.write(f, compress_type = zipfile.ZIP_DEFLATED)
+        self.send_email()
         #TODO:extensions of fa and cg files?
         #self.functional_annoation = os.listdir(f'{self.tmp_folder}/*.?')
         #self.comparative_genomics = os.listdir(f'{self.tmp_folder}/*.?')
     #TODO what do we want to sent? which files --> will need to compress them
 
+
+    def extract_gene_prediction_statistics(self, list_of_gff):
+        with open(self.tmp_folder + '/gene_prediction_statistics.txt' , 'w+') as out:
+            out.write("Sample #CDS #tRNA #rRNA #CRISPR\n")
+            for p in list_of_gff:
+                statistics = subprocess.check_output([f'{cwd}extract_statistics_gene_prediction.sh', p])
+                out.write(str(statistics.strip())[2:-1])
+        out.close()
+
+
     def send_email(self):
-
-        receiver = self.user_email
         body = f"Results from ECHO for job {self.job_id}"
-        filename = self.path_to_results
-
-        yag = yagmail.SMTP("echowebserver@gmail.com")
+        # use oauth2 for authorization requires oauth2.json file to be in same folder as cwd
+        yag = yagmail.SMTP("echowebserver@gmail.com", oauth2_file=f'{cwd}oauth2.json')
         yag.send(
-        to=receiver,
+        to=self.user_email,
         subject="ECHO results",
         contents=body, 
-        attachments=self.zipped_files,
+        attachments=self.files_to_send,
         )
 
 
@@ -151,7 +171,7 @@ def start_to_end(argv):
     if user_email is not None:
         Results(current_tmp_dir, user_email)
     # done with everything --> clean up
-    os.rmdir(current_tmp_dir)
+    shutil.rmtree(current_tmp_dir)
 
 if __name__ == "__main__":
     start_to_end(sys.argv[1:])

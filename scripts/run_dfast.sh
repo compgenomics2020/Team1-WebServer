@@ -78,4 +78,4 @@ mv tmp_dfast/protein.faa ${output}${genome_name}_protein.faa
 mv tmp_dfast/cds.fna ${output}${genome_name}_cds.fna
 mv tmp_dfast/rna.fna ${output}${genome_name}_rna.fna
 rm -r tmp_dfast
-rm -r gene_predicted_files
+#rm -r gene_predicted_files
