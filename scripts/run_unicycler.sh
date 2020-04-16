@@ -30,17 +30,16 @@ if ((verbose)); then
         echo "\nMaking output directory\n"
 fi
 
-mkdir -p ${outputFolder}
+
 
 if ((verbose)); then
         echo "\nStarted genome assembly\n"
 fi
+ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa mkdir ${outputFolder}/gwa_output
 ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${unicyclerPath} -1 ${pathToInputFiles}/gwa_1.fq.gz -2 ${pathToInputFiles}/gwa_2.fq.gz -t ${threads} -o ${outputFolder}/gwa_output
-
-mkdir assembled_contigs
 
 for v in `ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw`
 do
-        cp ${outputFolder}/${v}_output/assembly.fasta assembled_contigs/${v}_assembled.fasta
-done
-rm -r 
+        cp ${outputFolder}/${v}_output/assembly.fasta ${outputFolder}/${v}_assembled.fasta
+	rm -r ${outputFolder}/${v}_output
+done 

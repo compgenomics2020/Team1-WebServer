@@ -11,7 +11,7 @@ get_input () {
                         t) threads=$OPTARG;;
 			q) quastPath=$OPTARG;;
 			p) pathToInputFiles=$OPTARG;;
-                        u) pathToUnicyclerContig=$OPTARG;;
+                        u) pathToContig=$OPTARG;;
                         o) outputFolder=$OPTARG;;
 			h) info_usage=1;;
                         v) verbose=1;;
@@ -20,7 +20,7 @@ get_input () {
         done
 	
         if ((info_usage)); then
-                echo -e "The script contains a pipeline for running quast evaluation.\nRun the script in the following format after giving the script executable permission:\n./run_quast.sh\nArguments available\n\t-q <Path to quast.py file>\n\t-p <Path to input files>\n\t-u <Path to the Unicycler contig file>\n\t-o <Path to output folder>\n\t-t <Number of threads>\n\t-v \tVerbose mode\n\t-h\tPrint usage information"
+                echo -e "The script contains a pipeline for running quast evaluation.\nRun the script in the following format after giving the script executable permission:\n./run_quast.sh\nArguments available\n\t-q <Path to quast.py file>\n\t-p <Path to input files>\n\t-u <Path to the contig files>\n\t-o <Path to output folder>\n\t-t <Number of threads>\n\t-v \tVerbose mode\n\t-h\tPrint usage information"
                 exit
         fi
 }
@@ -31,16 +31,24 @@ if ((verbose)); then
 	echo "\nMaking output directory\n"
 fi
 
-mkdir ${outputFolder}/quast_output
-
 if ((verbose)); then
         echo "\nStarted process of identification of Assembler to use\n"
 fi
 
-ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa python3 ${quastPath} ${pathToUnicyclerContig}/gwa_output/assembly.fasta -o ${outputFolder}/quast_output/gwa -t ${threads} -l Unicycler
+varn=""
+varf=""
 
-for v in `ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw`
-do
-	cp ${pathToUnicyclerContig}/${v}_output/assembly.fasta ${outputFolder}/assembled_contigs/${v}_assembled.fasta
+mkdir ${outputFolder}/quast_output
+
+for name in `ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw` 
+do 
+	varn+=" ${name}"
+	varf+=" ${outputFolder}/${name}_assembled.fasta"
 done
+
+varn=`echo $varn | tr ' ' ', '`
+
+python3 ${quastPath} -o ${outputFolder}/quast_output -t ${threads} -l ${varn} ${varf}
+
+mv ${outputFolder}/quast_output/report.txt ${outputFolder}/assembly_statistics.txt
 rm -r ${outputFolder}/quast_output

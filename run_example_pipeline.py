@@ -31,7 +31,7 @@ class Pipeline:
         self.gene_prediction = None
         self.functional_annotation = None
         self.comparative_genomics = None
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
         # run assembling
         if self.assemble:
             self.assembly = self.run_genome_assembly()
@@ -54,13 +54,14 @@ class Pipeline:
 
 
     def run_genome_assembly(self):
-       	# output2 = subprocess.getoutput('/home/dkesar3/Team1-WebServer/scripts/quast.sh -t 8 -q /home/projects/group-a/bin/quast/quast.py -p test_data -u /home/dkesar3/Team1-WebServer/unicycler_contigs -o /home/dkesar3/Team1-WebServer/assembled_contigs/ -v')
-        # run unicycler
-        self.output_path_assembly =f'{self.tmp_folder}/unicycler_contigs'
+	# output2 = subprocess.getoutput('/home/dkesar3/Team1-WebServer/scripts/quast.sh -t 8 -q /home/projects/group-a/bin/quast/quast.py -p test_data -u /home/dkesar3/Team1-WebServer/unicycler_contigs -o /home/dkesar3/Team1-WebServer/assembled_contigs/ -v')
+	# run unicycler
+        self.output_path_assembly =f'{self.tmp_folder}'
         log_file = open(f'{self.tmp_folder}/genomeAssemblyLog.txt','w+')
-        #TODO: remove absolute path 
-        #import pdb; pdb.set_trace()
-        output = subprocess.check_output(f'{cwd}scripts/run_unicycler.sh -t 8 -p {self.input_path} -o {self.tmp_folder} -m /home/projects/group-a/bin/miniconda3/bin/unicycler -v')
+	#TODO: remove absolute path 
+	#import pdb; pdb.set_trace()
+        output = subprocess.check_output([f"{cwd}scripts/run_unicycler.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-m", "/home/projects/group-a/bin/miniconda3/bin/unicycler", "-v"])
+        quast_output = subprocess.check_output([f"{cwd}scripts/run_quast.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-q", "/home/projects/group-a/bin/miniconda3/bin/quast.py", "-v"])
         log_file.write(output)
         log_file.close()
         return output
