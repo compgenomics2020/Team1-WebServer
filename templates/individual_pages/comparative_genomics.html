@@ -6,6 +6,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel ="stylesheet" href = "../static/template.css">
     <link rel="icon" href="https://img.icons8.com/color/96/000000/bacteria.png" />
+        <style>
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        font-color:blue
+      }
+
+      li {
+        display: inline;
+      }
+
+      li a {
+        padding: 20px;
+      }
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+    </style>
     <title>Comparative Genomics</title>
 
   </head>
@@ -29,6 +49,7 @@
             </div>
         </div>
       <a href="https://compgenomics2020.biosci.gatech.edu/Main_Page" target="_parent">Wiki</a>
+    <a href="class_results.html" target="_parent">Class results</a>
     </div>
 
 
@@ -42,9 +63,9 @@
     <h1 class="page-title"> Comparative Genomics </h1>
   </div>
 
-  <div class="container">
+  <div class="container" align="center"  style="padding:50p">
       <strong>
-          <p font-size=40px;>Input file</p>
+          <p style="text-align:center; font-size=40px;">Input file</p>
       </strong>
       <form action="./upload_sequence.py">
           <input type="file" id="myFile" name="filename">
@@ -53,18 +74,25 @@
 
   </div>
 
-  <div class="container">
+  <div class="container" align="center" style="padding:50p">
      <strong>
-      <form action="/action_page.php">
-  	<h5>Email</h5>
-  	<input type="text" id="fname" name="fname"><br><br>
-  	<h5>Output file name</h5>
-  	<input type="text" id="lname" name="lname"><br><br>
-  	<input type="submit" value="Submit">
-</strong>
-</form>
-
+          <p style="text-align:center; font-size=40px;">Email:</p>
+     </strong> 
+      <form action="./upload_sequence.py">
+  	<input type="text" id="emaul" name="emailaddress">
+      </form>
+      <strong>
+  	<p style="text-align:center; font-size=40px;">Output file name:</p>
+      </strong>
+      <form action="./upload_sequence.py">
+  	<input type="text" id="output" name="oname">
+      </form>
   </div>
+  <div class="buttom" align="center" style="padding:50p">
+    <br>
+    <button type="submit" class="btn btn-success">Submit</button>
+  </div>
+
 
   </body>
 </html>
