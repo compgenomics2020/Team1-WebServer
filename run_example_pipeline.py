@@ -116,7 +116,7 @@ class Pipeline:
         options = []
         options.append('-u')
         options.append('/home/projects/group-a/functional_annotation/clustering-tools/usearch11.0.667_i86linux32')
-        elif self.functional_annotation_parameters['eggnog']:
+        if self.functional_annotation_parameters['eggnog']:
             options.append('-e')
             options.append('/home/projects/group-a/functional_annotation/homology-tools/eggnog/eggnog-mapper/emapper.py')
         elif self.functional_annotation_parameters['signalp']:
@@ -136,10 +136,17 @@ class Pipeline:
         output = subprocess.check_output(cmd)
         log_file.write(str(output))
         log_file.close()
+        return output
 
+    def run_comparative_genomics(self, input_path):
+        log_file = open(f'{self.tmp_folder}/comparativeGenomicsLog.txt', 'w+')
+        import pdb; pdb.set_trace()
+        cmd = [f"{cwd}scripts/cg_pipeline.py", '-i', input_path, '-o', self.tmp_folder, '-c', '8', '-t', self.comparative_genomics_parameters['tools']]
+        output = subprocess.check_output(cmd)
+        log_file.write(str(output))
+        log_file.close()
+        return output
 
-    def run_compartive_genomics(self, input_path):
-        raise NotImplementedError
 
 class Results:
     """
@@ -215,6 +222,8 @@ def start_to_end(argv):
 
     parser.add_argument('-c', '--comparative_genomics', help='Perform comparative genomics, ',
                         action='store_true', default=False, dest='comparative_genomics', required=False)
+    parser.add_argument('--cg_tools', help='tool of choice: MUMmer (m), chewBBACA (c), kSNP3 (k), all (a), default=a',
+                        default='a', choices = ['m', 'c', 'k', 'a'], required=False, dest='cg_tools')
     parser.add_argument('-e', '--email', help="Email address of user to which results will be send",
                         default=None, required=False, dest='email')
     parser.add_argument('-i', '--input', help='Path to input files', required=True, dest='input')
@@ -240,7 +249,7 @@ def start_to_end(argv):
                                         'interpro': args['interpro']}
 
     comparative_genomics_parameters = {'comparative_genomics': args['comparative_genomics'],
-                                      }
+                                      'tools': args['cg_tools']}
 
     user_email = args['email']
     epidata = args['epidata']
