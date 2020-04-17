@@ -9,8 +9,8 @@ while getopts ":hi:o:grtv" opt
 do
     case $opt in
        h )
-         echo " -i <input of file> -o <path to output> -g <run GMS2 instead of prodigal> -r <run RNAmmer instead of barrnarp> -t <run tRNAscan-SE instead of Aragorn> -v <verbose> "
-         ;;
+         echo "run_dfast.sh -i <input of file> -o <path to output> -g <run GMS2 instead of prodigal> -r <run RNAmmer instead of barrnarp> -t <run tRNAscan-SE instead of Aragorn> -v <verbose> "
+         exit;;
        i )
          i=$OPTARG
          ;;
