@@ -39,7 +39,7 @@ genome_name=$( echo $genome | sed -e "s|.*\/||g" -e "s|.fasta||g" )
 # create output directory if doesn't exist
 if [ ! -d $output ]
 then
-    mkdir -p ${output}
+    mkdir -p ${output}/amino_acids
 fi
 
 if [ "$v" -eq 1 ]
@@ -74,7 +74,7 @@ $base_command
 
 # move files in final path and clean up
 mv tmp_dfast/genome.gff ${output}${genome_name}.gff
-mv tmp_dfast/protein.faa ${output}${genome_name}_protein.faa
+mv tmp_dfast/protein.faa ${output}/amino_acids/${genome_name}_protein.faa
 mv tmp_dfast/cds.fna ${output}${genome_name}_cds.fna
 mv tmp_dfast/rna.fna ${output}${genome_name}_rna.fna
 rm -r tmp_dfast
