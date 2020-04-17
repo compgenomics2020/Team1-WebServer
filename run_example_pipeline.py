@@ -13,7 +13,11 @@ class Pipeline:
     """
     Runs pipeline either from beginning or intermediary stage
     """
-    def __init__(self, tmp_folder, input_path, assemble=True, predict_genes=True, functional_annotation=True, comparative_genomics=True):
+    def __init__(self, tmp_folder, input_path, epidata_path,
+                 assembly_parameters,
+                 gene_prediction_parameters,
+                 functional_annotation_parameters,
+                 comparative_genomics_parameters):
         """
         Initialize class and run demanded steps of pipeline
         tmp_folder: str, path to temporary folder
@@ -24,10 +28,11 @@ class Pipeline:
         """
         self.tmp_folder = tmp_folder
         self.input_path = input_path
-        self.assemble = assemble
-        self.predict_genes = predict_genes
-        self.annotate_function = functional_annotation
-        self.compare_genomes = True
+        self.epidata_path = epidata_path
+        self.assembly_parameters = assembly_parameters
+        self.gene_prediction_parameters = gene_prediction_parameters
+        self.functional_annotation_parameters = functional_annotation_parameters
+        self.comparative_genomics_parameters = comparative_genomics_parameters
         # initialize results
         self.assembly = None
         self.gene_prediction = None
@@ -35,59 +40,105 @@ class Pipeline:
         self.comparative_genomics = None
         #import pdb; pdb.set_trace()
         # run assembling
-        if self.assemble:
+        if self.assembly_parameters['assemble']:
             self.assembly = self.run_genome_assembly()
 
         # run gene prediction
-        if self.predict_genes:
-            if not self.assemble:
+        if self.gene_prediction_parameters['predict_genes']:
+            if self.assembly is None:
                 input_path = self.input_path
             else:
-                input_path = self.output_path_assembly
+                input_path = self.tmp_folder
             self.gene_prediction = self.run_gene_prediction(input_path)
 
         # run functional annotation
-        #if self.annotate_function:
-        #    self.functional_annotation = self.run_functional_annotation()
+        if self.functional_annotation_parameters['functional_annotation']:
+            if self.gene_prediction is None:
+                input_path = self.input_path
+            else:
+                input_path = self.tmp_folder + '/amino_acids/'
+            self.functional_annotation = self.run_functional_annotation(input_path)
 
         # run comparative_genomics:
-        #if self.compare_genomes:
-        #    self.comparative_genomics = self.run_comparative_genomics()
+        if self.comparative_genomics_parameters['comparative_genomics']:
+            if self.functional_annotation is None:
+                input_path = self.input_path
+            else:
+                input_path = self.tmp_folder
+            self.comparative_genomics = self.run_comparative_genomics(input_path)
 
 
     def run_genome_assembly(self):
 	# output2 = subprocess.getoutput('/home/dkesar3/Team1-WebServer/scripts/quast.sh -t 8 -q /home/projects/group-a/bin/quast/quast.py -p test_data -u /home/dkesar3/Team1-WebServer/unicycler_contigs -o /home/dkesar3/Team1-WebServer/assembled_contigs/ -v')
-	# run unicycler
+        spades = self.assembly_parameters['spades']
+        trimming = self.assembly_parameters['trimming']
+        
         self.output_path_assembly =f'{self.tmp_folder}'
         log_file = open(f'{self.tmp_folder}/genomeAssemblyLog.txt','w+')
 
-	#TODO: remove absolute path 
-	#import pdb; pdb.set_trace()
-        output = subprocess.check_output([f"{cwd}scripts/run_unicycler.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-m", "/home/projects/group-a/bin/miniconda3/bin/unicycler", "-v"])
-        quast_output = subprocess.check_output([f"{cwd}scripts/run_quast.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-q", "/home/projects/group-a/bin/miniconda3/bin/quast.py", "-v"])
+        #TODO: Add trimming option
+        if not spades:
+            # run unicycler
+	    #TODO: remove absolute path 
+	    #import pdb; pdb.set_trace()
+            output = subprocess.check_output([f"{cwd}scripts/run_unicycler.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-m", "/home/projects/group-a/bin/miniconda3/bin/unicycler", "-v"])
+            quast_output = subprocess.check_output([f"{cwd}scripts/run_quast.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-q", "/home/projects/group-a/bin/miniconda3/bin/quast.py", "-v"])
+        else:
+            # run spades
+            raise NotImplementedError
 
         log_file.write(output)
         log_file.close()
         return output
 
     def run_gene_prediction(self, input_path):
+        options = []
+        if self.gene_prediction_parameters['gms2']:
+            options.append('-g')
+        elif self.gene_prediction_parameters['trnascan']:
+            options.append('-t')
+        elif self.gene_prediction_parameters['rnammer']:
+            options.append('-r')
+        
         log_file = open(f'{self.tmp_folder}/genePredictionLog.txt','w+')
-        assembled_files = [os.path.join(f'{input_path}', f) for f in\
-                           os.listdir(f'{input_path}') if\
-                           os.path.isfile(os.path.join(f'{input_path}', f))]
+        # run gene prediction on all fasta files
+        assembled_files = [f for f in glob.glob(f'{input_path}/*.fasta') if os.path.isfile(f)]
         for l in assembled_files:
             input_dir = [f"{cwd}scripts/run_dfast.sh", "-i",\
-                         l, "-o", self.tmp_folder +'/', "-v"]
+                         l, "-o", self.tmp_folder +'/', "-v" ] + options
             output = subprocess.check_output(input_dir)
             log_file.write(str(output))
         log_file.close()
         return output
 
-    def run_functional_annotation(self, output_path):
-        raise NotImplementedError
+    def run_functional_annotation(self, input_path):
+        log_file = open(f'{self.tmp_folder}/funtionalAnnotationLog.txt', 'w+')
+        options = []
+        options.append('-u')
+        options.append('/home/projects/group-a/functional_annotation/clustering-tools/usearch11.0.667_i86linux32')
+        elif self.functional_annotation_parameters['eggnog']:
+            options.append('-e')
+            options.append('/home/projects/group-a/functional_annotation/homology-tools/eggnog/eggnog-mapper/emapper.py')
+        elif self.functional_annotation_parameters['signalp']:
+            options.append('-p')
+            options.append('/home/projects/group-a/functional_annotation/ab-initio_tools/signalp-5.0b/bin/signalp')
+        elif self.functional_annotation_parameters['tmhmm']:
+             options.append('-t')
+             options.append('/home/projects/group-a/functional_annotation/ab-initio_tools/tmhmm-2.0c/bin/tmhmm')
+        elif self.functional_annotation_parameters['interpro']:
+             options.append('-s')
+             options.append('/home/projects/group-a/functional_annotation/homology-tools/interproscan/interproscan-5.41-78.0/interproscan.sh')
+        elif self.functional_annotation_parameters['deeparg']:
+             options.append('-d')
+             options.append('/home/projects/group-a/functional_annotation/homology-tools/deeparg/deeparg-ss/deepARG.py')
+
+        cmd  = [f"{cwd}scripts/functional_annotation.py", "-f", input_path, '-o', self.tmp_folder] + options
+        output = subprocess.check_output(cmd)
+        log_file.write(str(output))
+        log_file.close()
 
 
-    def run_compartive_genomics(self, output_path):
+    def run_compartive_genomics(self, input_path):
         raise NotImplementedError
 
 class Results:
@@ -141,34 +192,73 @@ def start_to_end(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--assemble', help='Assemble contigs, requires pair-end-reads in fastq format, default=0',
                         action='store_true', default=False, dest='assemble', required=False)
+    parser.add_argument('--spades', help='Run SPADES instead of Unicycler, default=0', default=False, action='store_true',
+                        required=False, dest='spades')
+    parser.add_argument('--trim', help='Perform trimming, default=0', default=False, action='store_true', required=False, dest='trim')
+
     parser.add_argument('-p', '--predict_genes', help='Predict genes in assembled contigs, requires either files in FASTA format or assembly must be run',
                         action='store_true', default=False, dest='predict_genes', required=False)
-    #TODO: What is the required input?
+    parser.add_argument('--gms2', help='Use GeneMarkS2 for CDS prediction instead of Prodigal', default=False,
+                        action='store_true', required=False, dest='gms2')
+    parser.add_argument('--trnascan', help='Use tRNAscan-SE instead for tRNA prediciton instead of Aragorn',
+                        default=False, action='store_true', dest='trnascan')
+    parser.add_argument('--rnammer', help='Run RNAmmer for rRNA prediciton instead of barrnap',
+                        default=False, action='store_true', dest='rnammer')
     parser.add_argument('-f', '--functional_annoation', help='Perform functional annotation, ',
                         action='store_true', default=False, dest='functional_annotation', required=False)
+    #parser.add_argument('--usearch', help='Run Usearch', default=False, action='store_true', dest='usearch', required=False)
+    parser.add_argument('--eggnog', help='Run eggnog', default=False, action='store_true', dest='eggnog', required=False)
+    parser.add_argument('--tmhmm', help='Run tmhmm', default=False, action='store_true', dest='tmhmm', required=False)
+    parser.add_argument('--signalp', help='Run signalp', default=False, action='store_true', dest='signalp', required=False)
+    parser.add_argument('--deeparg', help='Run DeepARG', default=False, action='store_true', dest='deeparg', required=False)
+    parser.add_argument('--interpro', help='Run interproscan', default=False, action='store_true', dest='interpro', required=False)
+
     parser.add_argument('-c', '--comparative_genomics', help='Perform comparative genomics, ',
                         action='store_true', default=False, dest='comparative_genomics', required=False)
     parser.add_argument('-e', '--email', help="Email address of user to which results will be send",
                         default=None, required=False, dest='email')
     parser.add_argument('-i', '--input', help='Path to input files', required=True, dest='input')
+    parser.add_argument('--epidata', help='Path to epidata', required=False, default=None, dest='epidata')
     args = parser.parse_args()
     args = vars(args)
     input_path = args['input']
-    assemble = args['assemble']
-    predict_genes = args['predict_genes']
-    functional_annotation = args['functional_annotation']
-    comparative_genomics = args['comparative_genomics']
+
+    assembly_parameters = {'assemble': args['assemble'],
+                           'spades': args['spades'],
+                           'trimming': args['trim']}
+
+    gene_prediction_parameters = {'predict_genes': args['predict_genes'],
+                                  'gms2': args['gms2'],
+                                  'trnascan': args['trnascan'],
+                                  'rnammer': args['rnammer']}
+    
+    functional_annotation_parameters = {'functional_annotation': args['functional_annotation'],
+                                        'eggnog': args['eggnog'],
+                                        'tmhmm': args['tmhmm'],
+                                        'signalp': args['signalp'],
+                                        'deeparg': args['deeparg'],
+                                        'interpro': args['interpro']}
+
+    comparative_genomics_parameters = {'comparative_genomics': args['comparative_genomics'],
+                                      }
+
     user_email = args['email']
+    epidata = args['epidata']
+    
     global cwd
     cwd = os.getcwd() + '/'
     # create tmp dir in cwd
     current_tmp_dir = tempfile.mkdtemp(prefix=cwd)
     #subprocess.call(["python", "./preinstall.py"])
-    pipeline = Pipeline(current_tmp_dir, input_path, assemble, predict_genes, functional_annotation, comparative_genomics)
+    pipeline = Pipeline(current_tmp_dir, input_path, epidata,
+                        assembly_parameters,
+                        gene_prediction_parameters,
+                        functional_annotation_parameters,
+                        comparative_genomics_parameters)
     if user_email is not None:
         Results(current_tmp_dir, user_email)
     # done with everything --> clean up
-    shutil.rmtree(current_tmp_dir)
+    #shutil.rmtree(current_tmp_dir)
 
 if __name__ == "__main__":
     start_to_end(sys.argv[1:])
