@@ -9,8 +9,8 @@ while getopts ":hi:o:grtv" opt
 do
     case $opt in
        h )
-         echo " -i <input of file> -o <path to output> -g <run GMS2 instead of prodigal> -r <run RNAmmer instead of barrnarp> -t <run tRNAscan-SE instead of Aragorn> -v <verbose> "
-         ;;
+         echo "run_dfast.sh -i <input of file> -o <path to output> -g <run GMS2 instead of prodigal> -r <run RNAmmer instead of barrnarp> -t <run tRNAscan-SE instead of Aragorn> -v <verbose> "
+         exit;;
        i )
          i=$OPTARG
          ;;
@@ -39,7 +39,7 @@ genome_name=$( echo $genome | sed -e "s|.*\/||g" -e "s|.fasta||g" )
 # create output directory if doesn't exist
 if [ ! -d $output ]
 then
-    mkdir -p ${output}
+    mkdir -p ${output}/amino_acids
 fi
 
 if [ "$v" -eq 1 ]
@@ -74,7 +74,7 @@ $base_command
 
 # move files in final path and clean up
 mv tmp_dfast/genome.gff ${output}${genome_name}.gff
-mv tmp_dfast/protein.faa ${output}${genome_name}_protein.faa
+mv tmp_dfast/protein.faa ${output}/amino_acids/${genome_name}_protein.faa
 mv tmp_dfast/cds.fna ${output}${genome_name}_cds.fna
 mv tmp_dfast/rna.fna ${output}${genome_name}_rna.fna
 rm -r tmp_dfast
