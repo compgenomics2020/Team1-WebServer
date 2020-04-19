@@ -19,7 +19,7 @@ class Barrnap(StructuralAnnotationTool):
     version = None
     TYPE = "rRNA"
     NAME = "Barrnap"
-    VERSION_CHECK_CMD = ["/home/projects/group-a/dfast_core/bin/Linux/barrnap", "--version", "2>&1"]
+    VERSION_CHECK_CMD = ["/projects/VirtualHost/predicta/html/Team1-WebServer/tools/dfast_core/bin/Linux/barrnap", "--version", "2>&1"]
     VERSION_PATTERN = r"^barrnap (.+)$"
     VERSION_ERROR_MSG = "This may happen if Time::Piece cannot be found. " + \
       "If you are using CentOS/RedHat, try 'sudo yum install perl-Time-Piece'."

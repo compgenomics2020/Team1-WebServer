@@ -146,7 +146,7 @@ class JavaWrapper(Tool):
         Check the tool version.
         This method uses VERSION_CHECK_CMD and VERSION_PATTERN.
         """
-        version_check_command_ = ["/home/apfennig3/anaconda3/envs/geneprediction/bin/java", self.java_options, "-version", "2>&1 /dev/null"]
+        version_check_command_ = ["java", self.java_options, "-version", "2>&1 /dev/null"]
 
         self.logger.info("Checking {0} version... ".format(self.__class__.NAME))
         out, err = self.executeCommand(version_check_command_, shell=True)

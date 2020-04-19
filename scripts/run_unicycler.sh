@@ -22,7 +22,6 @@ get_input () {
                         *) echo "Incorrect arguments used. Use -h to know about the arguments available."
                 esac
         done
-
         if ((info_usage)); then
                 echo -e "The script contains a Genome Assembly pipeline.\nRun the script in the following format after giving the script executable permission:\n./run_unicycler.sh\nArguments available\n\t-p <Path to folder containing input fastq forward and backward reads annotated as <name>_1 and <name>_2 and are gzipped>\n\t-q\tSpecify 1 to perform quality control and trimming\n\t-k <Number of k-mer steps to use in assembly (default: 10)>\n\t-g <Specify genome assembler to use, with options as follows:\n\t\t1) a\tauto\n\t\t2) u\tUnicycler\n\t\t3) s\tSPAdes\n\t-o <Path to output folder>\n\t-t <Number of threads>\n\t-v \tVerbose mode\n\t-h\tPrint usage information"
                 exit
@@ -60,9 +59,9 @@ check_files () {
                 echo "Path: $outputFolder doesn't exist"
                 exit 1
         fi
-	spadesPath=/home/projects/group-a/bin/miniconda3/bin/spades.py
-	unicyclerPath=/home/projects/group-a/bin/miniconda3/bin/unicycler
-	fastp_path=/home/projects/group-a/bin/fastp
+	spadesPath=/projects/VirtualHost/predicta/html/miniconda3/bin/spades.py
+	unicyclerPath=/projects/VirtualHost/predicta/html/miniconda3/bin/unicycler
+	fastp_path=/projects/VirtualHost/predicta/html/miniconda3/bin/fastp
         if test -f "$unicyclerPath"; then
                 if ((verbose)); then
                         echo "Unicycler path  exists"

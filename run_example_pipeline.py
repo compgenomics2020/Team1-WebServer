@@ -72,20 +72,27 @@ class Pipeline:
 	# output2 = subprocess.getoutput('/home/dkesar3/Team1-WebServer/scripts/quast.sh -t 8 -q /home/projects/group-a/bin/quast/quast.py -p test_data -u /home/dkesar3/Team1-WebServer/unicycler_contigs -o /home/dkesar3/Team1-WebServer/assembled_contigs/ -v')
         spades = self.assembly_parameters['spades']
         trimming = self.assembly_parameters['trimming']
-        
+        kmer_size = self.assembly_parameters['kmer_size']        
         #self.output_path_assembly =f'{self.tmp_folder}'
         log_file = open(f'{self.tmp_folder}/genomeAssemblyLog.txt','w+')
-
+        options = []
         #TODO: Add trimming option
         if not spades:
-            # run unicycler
-	    #TODO: remove absolute path 
-            #import pdb; pdb.set_trace()
-            output = subprocess.check_output([f"{cwd}scripts/run_unicycler.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-m", "unicycler", "-v"])
-            quast_output = subprocess.check_output([f"{cwd}scripts/run_quast.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-q", "quast.py", "-v"])
+            options.append('-g')
+            options.append('a')
         else:
-            # run spades
-            raise NotImplementedError
+            options.append('-g')
+            options.append('s')
+        if trimming:
+            options.append('-q')
+            options.append('1')
+        if not kmer_size is None:
+            options.append('-k')
+            options.append(str(kmer_size))
+        # run unicycler
+        import pdb; pdb.set_trace()
+        output = subprocess.check_output([f"{cwd}scripts/run_unicycler.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-v", '1'] + options)
+        quast_output = subprocess.check_output([f"{cwd}scripts/run_quast.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-q", "quast.py", "-v"])
 
         log_file.write(str(output))
         log_file.close()
@@ -103,9 +110,11 @@ class Pipeline:
         log_file = open(f'{self.tmp_folder}/genePredictionLog.txt','w+')
         # run gene prediction on all fasta files
         assembled_files = [f for f in glob.glob(f'{input_path}/*.fasta') if os.path.isfile(f)]
+        import pdb; pdb.set_trace()
         for l in assembled_files:
             input_dir = [f"{cwd}scripts/run_dfast.sh", "-i",\
                          l, "-o", self.tmp_folder +'/', "-v" ] + options
+            import pdb; pdb.set_trace()
             output = subprocess.check_output(input_dir)
             log_file.write(str(output))
         log_file.close()
@@ -202,7 +211,7 @@ def start_to_end(argv):
     parser.add_argument('--spades', help='Run SPADES instead of Unicycler, default=0', default=False, action='store_true',
                         required=False, dest='spades')
     parser.add_argument('--trim', help='Perform trimming, default=0', default=False, action='store_true', required=False, dest='trim')
-
+    parser.add_argument('--kmer_size', help='Kmer-size used by unicycler', default=None, required=False, dest='kmer_size')
     parser.add_argument('-p', '--predict_genes', help='Predict genes in assembled contigs, requires either files in FASTA format or assembly must be run',
                         action='store_true', default=False, dest='predict_genes', required=False)
     parser.add_argument('--gms2', help='Use GeneMarkS2 for CDS prediction instead of Prodigal', default=False,
@@ -234,7 +243,8 @@ def start_to_end(argv):
 
     assembly_parameters = {'assemble': args['assemble'],
                            'spades': args['spades'],
-                           'trimming': args['trim']}
+                           'trimming': args['trim'],
+                           'kmer_size': args['kmer_size']}
 
     gene_prediction_parameters = {'predict_genes': args['predict_genes'],
                                   'gms2': args['gms2'],

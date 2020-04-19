@@ -19,7 +19,7 @@ class Prodigal(StructuralAnnotationTool):
     version = None
     TYPE = "CDS"
     NAME = "Prodigal"
-    VERSION_CHECK_CMD = ["/home/apfennig3/anaconda3/envs/geneprediction/bin/prodigal", "-v", "2>&1"]
+    VERSION_CHECK_CMD = ["prodigal", "-v", "2>&1"]
     VERSION_PATTERN = r"Prodigal V(.+):"
     SHELL = True
 
@@ -33,7 +33,7 @@ class Prodigal(StructuralAnnotationTool):
 
     def getCommand(self):
         """prodigal -f gff genome.fna > out.gff 2> out.log"""
-        cmd = ["/home/apfennig3/anaconda3/envs/geneprediction/bin/prodigal", self.cmd_options, "-g", str(self.transl_table), "-f", "gff", "-i", self.genomeFasta, ">", self.outputFile, "2>", self.logFile]
+        cmd = ["prodigal", self.cmd_options, "-g", str(self.transl_table), "-f", "gff", "-i", self.genomeFasta, ">", self.outputFile, "2>", self.logFile]
         return cmd
 
 

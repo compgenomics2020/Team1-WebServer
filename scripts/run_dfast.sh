@@ -55,7 +55,7 @@ else
     cds_tool='--use_prodigal'
 fi
 
-base_command="/home/projects/group-a/Team1-GenePrediction/bin/dfast_core/dfast -g ${genome} -o tmp_dfast --organism Ecoli --minimum_length 120 ${cds_tool} --gcode 11 --cpu 8"
+base_command="/projects/VirtualHost/predicta/html/miniconda3/bin/python3.7 /projects/VirtualHost/predicta/html/Team1-WebServer/tools/dfast_core/dfast -g ${genome} -o tmp_dfast --organism Ecoli --minimum_length 120 ${cds_tool} --gcode 11 --cpu 8"
 
 # run dfast with RNAmmer instead of barrnap
 if [ "$r" -eq 1 ]
@@ -74,7 +74,7 @@ $base_command
 
 # move files in final path and clean up
 mv tmp_dfast/genome.gff ${output}${genome_name}.gff
-mv tmp_dfast/protein.faa ${output}/amino_acids/${genome_name}_protein.faa
+mv tmp_dfast/protein.faa ${output}amino_acids/${genome_name}_protein.faa
 mv tmp_dfast/cds.fna ${output}${genome_name}_cds.fna
 mv tmp_dfast/rna.fna ${output}${genome_name}_rna.fna
 rm -r tmp_dfast

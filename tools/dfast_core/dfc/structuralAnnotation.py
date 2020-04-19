@@ -49,7 +49,6 @@ class StructuralAnnotation(object):
 
         self.tools = []
         self.logger.info("Initializing structural annotation tools... ")
-
         for tool_config in self.configs:
             Tool = TOOLS.get(tool_config["tool_name"])
             #import pdb; pdb.set_trace()
