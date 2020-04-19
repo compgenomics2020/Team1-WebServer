@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/projects/VirtualHost/predicta/html/miniconda3/bin/python3.7
 
 import os
 import glob
@@ -73,21 +73,21 @@ class Pipeline:
         spades = self.assembly_parameters['spades']
         trimming = self.assembly_parameters['trimming']
         
-        self.output_path_assembly =f'{self.tmp_folder}'
+        #self.output_path_assembly =f'{self.tmp_folder}'
         log_file = open(f'{self.tmp_folder}/genomeAssemblyLog.txt','w+')
 
         #TODO: Add trimming option
         if not spades:
             # run unicycler
 	    #TODO: remove absolute path 
-	    #import pdb; pdb.set_trace()
-            output = subprocess.check_output([f"{cwd}scripts/run_unicycler.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-m", "/home/projects/group-a/bin/miniconda3/bin/unicycler", "-v"])
-            quast_output = subprocess.check_output([f"{cwd}scripts/run_quast.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-q", "/home/projects/group-a/bin/miniconda3/bin/quast.py", "-v"])
+            #import pdb; pdb.set_trace()
+            output = subprocess.check_output([f"{cwd}scripts/run_unicycler.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-m", "unicycler", "-v"])
+            quast_output = subprocess.check_output([f"{cwd}scripts/run_quast.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-q", "quast.py", "-v"])
         else:
             # run spades
             raise NotImplementedError
 
-        log_file.write(output)
+        log_file.write(str(output))
         log_file.close()
         return output
 

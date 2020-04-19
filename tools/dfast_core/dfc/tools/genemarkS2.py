@@ -20,7 +20,7 @@ class GeneMarkS2(StructuralAnnotationTool):
     version = None
     TYPE = "CDS"
     NAME = "GeneMarkS2"
-    VERSION_CHECK_CMD = ["/home/projects/group-a/bin/gms2.pl | tail -n 1"]
+    VERSION_CHECK_CMD = ["gms2.pl | tail -n 1"]
     VERSION_PATTERN = r"Version: (.+)_lic"
     SHELL = True
 
@@ -39,7 +39,7 @@ class GeneMarkS2(StructuralAnnotationTool):
         gms2_work_dir = os.path.dirname(self.outputFile)
         rel_input_file = os.path.join("..", "input", os.path.basename(self.genomeFasta))
         output_file = os.path.basename(self.outputFile)
-        cmd = ["cd", gms2_work_dir, ";", "/home/projects/group-a/bin/gms2.pl", self.cmd_options, "--genome-type", 
+        cmd = ["cd", gms2_work_dir, ";", "gms2.pl", self.cmd_options, "--genome-type", 
                 self.genome_type, "--gcode", str(self.transl_table), "--format", self.out_format, "--seq", rel_input_file, "--output", output_file]
         # cmd = ["gms2.pl", self.cmd_options, "--genome-type", self.genome_type, "--gcode", str(self.transl_table), "--format", self.out_format, "--seq", self.genomeFasta, "--output", self.outputFile]
         return cmd

@@ -19,7 +19,7 @@ class RNAmmer(StructuralAnnotationTool):
     version = None
     TYPE = "rRNA"
     NAME = "RNAmmer"
-    VERSION_CHECK_CMD = ["/home/projects/group-a/Team1-GenePrediction/bin/rnammer-1-2/rnammer", "-v"]
+    VERSION_CHECK_CMD = ["rnammer", "-v"]
     VERSION_PATTERN = r"This rnammer (.+), running from"
     SHELL = True
 
@@ -33,7 +33,7 @@ class RNAmmer(StructuralAnnotationTool):
 
     def getCommand(self):
         """rnammer -S arc/bac/euk (-multi) (-m tsu,lsu,ssu) (-f) (-k) (-gff [gff file]) (-xml [xml file]) (-f [fasta file]) (-h [HMM report]) [sequence]"""
-        cmd = ["/home/projects/group-a/Team1-GenePrediction/bin/rnammer-1-2/rnammer", "-S", self.model, "-m tsu,lsu,ssu", self.cmd_options, "-gff", self.outputFile, self.genomeFasta]
+        cmd = ["rnammer", "-S", self.model, "-m tsu,lsu,ssu", self.cmd_options, "-gff", self.outputFile, self.genomeFasta]
         return cmd
 
     def getFeatures(self):

@@ -1,4 +1,4 @@
-#!/home/apfennig3/anaconda3/envs/geneprediction/bin/python3.8
+#! /usr/bin/env python
 # coding: UTF8
 
 import subprocess
