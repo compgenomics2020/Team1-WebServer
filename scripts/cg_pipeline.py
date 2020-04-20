@@ -14,9 +14,9 @@ def chewBBACA(input_genomes,output_dir, cpu):
     # Get training file
     if not os.path.isfile(output_dir+"prodigal_training_files/Escherichia_coli.trn"):
         subprocess.run("git clone https://github.com/mickaelsilva/prodigal_training_files", shell = True)
-
+    import pdb; pdb.set_trace()
     # wgMLST Schema Creation
-    wg = "chewBBACA.py CreateSchema -i " + input_genomes + " --cpu " + str(cpu) + " -o "+ output_dir +"Schema --ptf " + output_dir + "prodigal_training_files/Escherichia_coli.trn"
+    wg = "chewBBACA.py CreateSchema -i " + input_genomes + " --cpu " + str(cpu) + " -o "+ output_dir + "Schema/" + " --ptf " "Escherichia_coli.trn"
     #print(wg.split())
     subprocess.run(wg.split())
 
@@ -45,7 +45,6 @@ def collect_assembled_genomes(pathToInputFiles):
     input_files = os.listdir(pathToInputFiles)
     base_names = []
     cleaned_files = []
-    import pdb; pdb.set_trace()
     for file in input_files:
         if file.endswith(".fasta"):
             base_names.append(file)
@@ -53,9 +52,9 @@ def collect_assembled_genomes(pathToInputFiles):
     return(base_names, cleaned_files)
 
 def MUMmer(prefix, reference_file, query_file):
-    nucmer_command = ["nucmer", "-p", "prefix", reference_file, query_file]
+    nucmer_command = ["nucmer", "-p", prefix, reference_file, query_file]
     delta_file = prefix+".delta"
-    dnadiff_command = ["dnadiff", "-p", "-d", delta_file]
+    dnadiff_command = ["dnadiff", "-d", delta_file]
     subprocess.call(nucmer_command)
     subprocess.call(dnadiff_command)
     return(delta_file)
@@ -162,11 +161,10 @@ def main():
 
     #call MUMmer
     names, mummer_inputs = collect_assembled_genomes(args.input)
-    import pdb; pdb.set_trace()
     reference = mummer_inputs[0]
 
     for i in range(0, len(mummer_inputs)):
-        prefix = names[i][0:7]
+        prefix = args.input + names[i]
         MUMmer(prefix, reference, mummer_inputs[i])
 
     #call chewBBACA

@@ -8,6 +8,9 @@ Please ensure to have the following tools in your `PATH` variable:
   * Signalp
   * InterProScan
   * deepARG (need to update path to `deepARG.py` in `run_example_pipeline.py` and python interpreter in `scripts/functional_annotation.py`)
+  * ChewBBACA
+  * kSNP3
+  * figtree
   * Quast
   * GeneMarkS2
   * RNAmmer

@@ -48,7 +48,7 @@ class Pipeline:
             if self.assembly is None:
                 input_path = self.input_path
             else:
-                input_path = self.tmp_folder
+                input_path = self.tmp_folder + 'assembled_outputs/'
             self.gene_prediction = self.run_gene_prediction(input_path)
 
         # run functional annotation
@@ -65,7 +65,7 @@ class Pipeline:
             if self.functional_annotation is None:
                 input_path = self.input_path
             else:
-                input_path = self.tmp_folder
+                input_path = self.tmp_folder + 'assembled_outputs/'
             self.comparative_genomics = self.run_comparative_genomics(input_path)
 
 
@@ -141,7 +141,6 @@ class Pipeline:
              options.append('/projects/VirtualHost/predicta/html/Team1-WebServer/tools/deeparg-ss/deepARG.py')
 
         cmd  = [f"{cwd}scripts/functional_annotation.py", "-f", input_path, '-o', self.tmp_folder] + options
-        import pdb; pdb.set_trace()
         output = subprocess.check_output(cmd)
         log_file.write(str(output))
         log_file.close()

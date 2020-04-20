@@ -105,7 +105,7 @@ genome_assembly () {
         if ((verbose)); then
                 echo "\nExecuting genome assembly with tool "
         fi
-
+	mkdir ${outputFolder}/assembled_outputs 
         if [ "$genomeAssembler" == "s" ]; then
                 echo "SPAdes"
 		if ((qualityControl)); then
@@ -121,7 +121,7 @@ genome_assembly () {
 			rm -r ${pathToInputFiles}/trimmed_reads
                         for v in `ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw`
                         do
-                                cp ${outputFolder}/${v}_output/contigs.fasta ${outputFolder}/${v}_assembled.fasta
+                                cp ${outputFolder}/${v}_output/contigs.fasta ${outputFolder}/assembled_outputs/${v}_assembled.fasta
 				cp ${outputFolder}/fastp_outputs/${v}_report/fastp.html ${outputFolder}/${v}_fastp_report.html 
                                 rm -r ${outputFolder}/${v}_output
                         done
@@ -140,7 +140,7 @@ genome_assembly () {
 			rm -r ${pathToInputFiles}/trimmed_reads
                         for v in `ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw`
                         do
-                                cp ${outputFolder}/${v}_output/contigs.fasta ${outputFolder}/${v}_assembled.fasta
+                                cp ${outputFolder}/${v}_output/contigs.fasta ${outputFolder}/assembled_outputs/${v}_assembled.fasta
 				rm -r ${outputFolder}/${v}_output
                         done
                 fi
@@ -160,7 +160,7 @@ genome_assembly () {
 			rm -r ${pathToInputFiles}/trimmed_reads
 			for v in `ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw`
 			do
-        			cp ${outputFolder}/${v}_output/assembly.fasta ${outputFolder}/${v}_assembled.fasta
+        			cp ${outputFolder}/${v}_output/assembly.fasta ${outputFolder}/assembled_outputs/${v}_assembled.fasta
         			cp ${outputFolder}/fastp_outputs/${v}_report/fastp.html ${outputFolder}/${v}_fastp_report.html
 				rm -r ${outputFolder}/${v}_output
 			done
@@ -179,7 +179,7 @@ genome_assembly () {
 			rm -r ${pathToInputFiles}/trimmed_reads
 			for v in `ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw`
 			do
-        			cp ${outputFolder}/${v}_output/assembly.fasta ${outputFolder}/${v}_assembled.fasta
+        			cp ${outputFolder}/${v}_output/assembly.fasta ${outputFolder}/assembled_outputs/${v}_assembled.fasta
         			rm -r ${outputFolder}/${v}_output
 			done
                 fi
