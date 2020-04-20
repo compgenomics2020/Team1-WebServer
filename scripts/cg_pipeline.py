@@ -40,11 +40,12 @@ def chewBBACA(input_genomes,output_dir, cpu):
 
     return None
 
-def collect_assembled_genomes():
-    pathToInputFiles = "/home/projects/group-a/Team1-GenomeAssembly/assembled_output/"
+def collect_assembled_genomes(pathToInputFiles):
+    #pathToInputFiles = "/home/projects/group-a/Team1-GenomeAssembly/assembled_output/"
     input_files = os.listdir(pathToInputFiles)
     base_names = []
     cleaned_files = []
+    import pdb; pdb.set_trace()
     for file in input_files:
         if file.endswith(".fasta"):
             base_names.append(file)
@@ -54,9 +55,9 @@ def collect_assembled_genomes():
 def MUMmer(prefix, reference_file, query_file):
     nucmer_command = ["nucmer", "-p", "prefix", reference_file, query_file]
     delta_file = prefix+".delta"
-    dnaff_command = ["dnaff", "-p", "-d", delta_file]
+    dnadiff_command = ["dnadiff", "-p", "-d", delta_file]
     subprocess.call(nucmer_command)
-    subprocess.call(dnaff_command)
+    subprocess.call(dnadiff_command)
     return(delta_file)
 
 def kSNP(pathToInputDirectory,outDir,k,tree_type):
@@ -160,8 +161,9 @@ def main():
         output += "/"
 
     #call MUMmer
-    names, mummer_inputs = collect_assembled_genomes()
-    reference = mummer_inputs[1]
+    names, mummer_inputs = collect_assembled_genomes(args.input)
+    import pdb; pdb.set_trace()
+    reference = mummer_inputs[0]
 
     for i in range(0, len(mummer_inputs)):
         prefix = names[i][0:7]
