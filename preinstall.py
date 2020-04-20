@@ -14,4 +14,6 @@ subprocess.call(["conda", "install", "-c", "bioconda", "unicycler"])
 subprocess.call(["conda", "install", "-c", "bioconda", "prodigal"])
 subprocess.call(["conda", "install", "-c", "conda-forge", "yagmail"])
 subprocess.call(["conda", "install", "-c", "anaconda", "keyring"])
-
+subprocess.call(["conda", "install", "-c", "bioconda",  "perl-xml-simple"])
+subprocess.call(["conda", "install", "-c", "bioconda", "trnascan-se"])
+subprocess.call(["conda" "install", "-c", "bioconda", "perl-time-piece"])

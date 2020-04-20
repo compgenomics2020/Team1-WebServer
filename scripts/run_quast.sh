@@ -48,7 +48,7 @@ done
 
 varn=`echo $varn | tr ' ' ', '`
 
-python3 ${quastPath} -o ${outputFolder}/quast_output -t ${threads} -l ${varn} ${varf}
+${quastPath} -o ${outputFolder}/quast_output -t ${threads} -l ${varn} ${varf}
 
 mv ${outputFolder}/quast_output/report.txt ${outputFolder}/assembly_statistics.txt
 rm -r ${outputFolder}/quast_output

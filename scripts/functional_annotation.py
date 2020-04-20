@@ -13,8 +13,7 @@ import tempfile
 import subprocess
 
 def perform_clustering(path, files, prot_or_nucl, identity, tool, outpath):
-	fh = open(outpath + "/combined_labelled_fasta.fna", "w")
-	
+	fh = open(outpath + "/combined_labelled_fasta.fna", "w")	
 	for i in files:
 		reader = open(path+"/"+i, "r")
 		
@@ -27,7 +26,6 @@ def perform_clustering(path, files, prot_or_nucl, identity, tool, outpath):
 		reader.close()
 	
 	fh.close()
-	
 	#command on the server
 	#clustering-tools/usearch11.0.667_i86linux32 -cluster_fast temp/combined_labelled_fasta.fna -id 0.7 -centroids temp/our_centroids.fa -uc temp/labeled_seqs.fa
 	cmd = [tool, "-cluster_fast", outpath+"/combined_labelled_fasta.fna", "-id", str(identity), "-centroids", outpath+"/our_centroids.fa", "-uc", outpath+"/labeled_seqs.fa"]
@@ -47,7 +45,7 @@ def do_deeparg(tool,seqtype,centroids,outputPath):
 	#python homology-tools/deeparg/deeparg-ss/deepARG.py --align --genes --type prot --input temp/our_centroids.fa --output /temp/deeparg_results/our_centroids.fa.out
 	if os.path.exists(centroids):
 		#env= ["conda","activate","python2.7"]
-		cmd= ["python2", tool,"--align", "--genes", "--type", seqtype, "--input", centroids, "--output", outputPath ]
+		cmd= ["/projects/VirtualHost/predicta/html/miniconda3/envs/deeparg-env/bin/python2", tool,"--align", "--genes", "--type", seqtype, "--input", centroids, "--output", outputPath ]
 		#subprocess.call(env)
 		subprocess.call(cmd)
 	else:
@@ -56,7 +54,7 @@ def do_deeparg(tool,seqtype,centroids,outputPath):
 def do_eggnog(tool,centroids,outputPath):
 	if os.path.exists(centroiids):
 		#env= ["conda","activate","python2.7"]
-		cmd= ["python2", tool, "-i", centroids, "--output", "our_centroids", "-m", "diamond", "-d", "bact", "-o", outputPath]
+		cmd= [tool, "-i", centroids, "--output", "our_centroids", "-m", "diamond", "-d", "bact", "-o", outputPath]
 		#subprocess.call(env)
 		subprocess.call(cmd)
 	else:
@@ -222,7 +220,7 @@ def opts():
 #Main should be at bottom.
 def main():
 	options, args = opts()
-	
+        import pdb; pdb.set_trace()	
 	file_path = options.files
 	
 	clust_identity = options.clust_id
@@ -279,8 +277,8 @@ def main():
 	else:
 		print("Clustering nucleotides...")
 		perform_clustering(file_path, input_files, is_protein, clust_identity, usearch, out)
-		
-	centroids_loc = out+"/our_centroids.fa"
+        import pdb; pdb.set_trace()		
+	centroids_loc = out+"our_centroids.fa"
 	
 	
 	

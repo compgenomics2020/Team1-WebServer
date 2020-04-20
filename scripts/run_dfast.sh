@@ -37,9 +37,10 @@ output=$o
 genome_name=$( echo $genome | sed -e "s|.*\/||g" -e "s|.fasta||g" )
 
 # create output directory if doesn't exist
-if [ ! -d $output ]
+if [ ! -d ${output}amino_acids ]
 then
-    mkdir -p ${output}/amino_acids
+    echo $output
+    mkdir -p ${output}amino_acids
 fi
 
 if [ "$v" -eq 1 ]

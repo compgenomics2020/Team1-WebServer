@@ -54,7 +54,8 @@ class Pipeline:
         # run functional annotation
         if self.functional_annotation_parameters['functional_annotation']:
             if self.gene_prediction is None:
-                input_path = self.input_path
+                #TODO: remove amino acids
+                input_path = self.input_path + 'amino_acids/'
             else:
                 input_path = self.tmp_folder + '/amino_acids/'
             self.functional_annotation = self.run_functional_annotation(input_path)
@@ -90,7 +91,6 @@ class Pipeline:
             options.append('-k')
             options.append(str(kmer_size))
         # run unicycler
-        import pdb; pdb.set_trace()
         output = subprocess.check_output([f"{cwd}scripts/run_unicycler.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-v", '1'] + options)
         quast_output = subprocess.check_output([f"{cwd}scripts/run_quast.sh", "-t", "8", "-p", self.input_path, "-o", self.tmp_folder, "-q", "quast.py", "-v"])
 
@@ -110,7 +110,6 @@ class Pipeline:
         log_file = open(f'{self.tmp_folder}/genePredictionLog.txt','w+')
         # run gene prediction on all fasta files
         assembled_files = [f for f in glob.glob(f'{input_path}/*.fasta') if os.path.isfile(f)]
-        import pdb; pdb.set_trace()
         for l in assembled_files:
             input_dir = [f"{cwd}scripts/run_dfast.sh", "-i",\
                          l, "-o", self.tmp_folder +'/', "-v" ] + options
@@ -124,24 +123,25 @@ class Pipeline:
         log_file = open(f'{self.tmp_folder}/funtionalAnnotationLog.txt', 'w+')
         options = []
         options.append('-u')
-        options.append('/home/projects/group-a/functional_annotation/clustering-tools/usearch11.0.667_i86linux32')
+        options.append('usearch11.0.667_i86linux32')
         if self.functional_annotation_parameters['eggnog']:
             options.append('-e')
-            options.append('/home/projects/group-a/functional_annotation/homology-tools/eggnog/eggnog-mapper/emapper.py')
-        elif self.functional_annotation_parameters['signalp']:
+            options.append('emapper.py')
+        if self.functional_annotation_parameters['signalp']:
             options.append('-p')
-            options.append('/home/projects/group-a/functional_annotation/ab-initio_tools/signalp-5.0b/bin/signalp')
-        elif self.functional_annotation_parameters['tmhmm']:
+            options.append('signalp')
+        if self.functional_annotation_parameters['tmhmm']:
              options.append('-t')
-             options.append('/home/projects/group-a/functional_annotation/ab-initio_tools/tmhmm-2.0c/bin/tmhmm')
-        elif self.functional_annotation_parameters['interpro']:
+             options.append('tmhmm')
+        if self.functional_annotation_parameters['interpro']:
              options.append('-s')
-             options.append('/home/projects/group-a/functional_annotation/homology-tools/interproscan/interproscan-5.41-78.0/interproscan.sh')
-        elif self.functional_annotation_parameters['deeparg']:
+             options.append('interproscan.sh')
+        if self.functional_annotation_parameters['deeparg']:
              options.append('-d')
-             options.append('/home/projects/group-a/functional_annotation/homology-tools/deeparg/deeparg-ss/deepARG.py')
+             options.append('/projects/VirtualHost/predicta/html/Team1-WebServer/tools/deeparg-ss/deepARG.py')
 
         cmd  = [f"{cwd}scripts/functional_annotation.py", "-f", input_path, '-o', self.tmp_folder] + options
+        import pdb; pdb.set_trace()
         output = subprocess.check_output(cmd)
         log_file.write(str(output))
         log_file.close()
@@ -267,7 +267,7 @@ def start_to_end(argv):
     global cwd
     cwd = os.getcwd() + '/'
     # create tmp dir in cwd
-    current_tmp_dir = tempfile.mkdtemp(prefix=cwd)
+    current_tmp_dir = '/projects/VirtualHost/predicta/html/Team1-WebServer/07qa0i38/'
     #subprocess.call(["python", "./preinstall.py"])
     pipeline = Pipeline(current_tmp_dir, input_path, epidata,
                         assembly_parameters,
