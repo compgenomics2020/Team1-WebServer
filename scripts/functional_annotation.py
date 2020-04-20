@@ -282,12 +282,12 @@ def main():
 	
 	
 	
-	#do_signalP5(sigP, initio_root)
-	#do_TMHMM(tm, initio_root)
-	#do_pilercr(pilercrOutputPath)
-	#do_interproscan(interpro, centroids_loc, interpro_dir)
-	#do_deeparg(deeparg, "prot", centroids_loc, deeparg_dir+"our_centroids.fa.out")
-	#do_eggnog(eggnog, centroids_loc, eggnog_dir)
+	do_signalP5(sigP, initio_root)
+	do_TMHMM(tm, initio_root)
+	do_pilercr(pilercrOutputPath)
+	do_interproscan(interpro, centroids_loc, interpro_dir)
+	do_deeparg(deeparg, "prot", centroids_loc, deeparg_dir+"our_centroids.fa.out")
+	do_eggnog(eggnog, centroids_loc, eggnog_dir)
 	
 	
 #Just runs main.
