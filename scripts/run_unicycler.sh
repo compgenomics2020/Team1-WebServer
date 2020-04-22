@@ -95,53 +95,53 @@ quality_control () {
         if ((verbose)); then
                 echo "\nExecuting quality control and trimming\nCreating folders for output:"
         fi
-        mkdir ${outputFolder}/fastp_outputs
-        mkdir ${outputFolder}/trimmed_reads
-        ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa mkdir ${outputFolder}/fastp_outputs/gwa_report
-        ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${fastp_path} -w ${threads} -i ${pathToInputFiles}/gwa_1.fq.gz -I ${pathToInputFiles}/gwa_2.fq.gz -5 -3 -c -o ${outputFolder}/trimmed_reads/gwa_1.fq.gz --out2 ${outputFolder}/trimmed_reads/gwa_2.fq.gz -j ${outputFolder}/fastp_outputs/gwa_report/fastp.json -h ${outputFolder}/fastp_outputs/gwa_report/fastp.html
+        mkdir ${outputFolder}fastp_outputs
+        mkdir ${outputFolder}trimmed_reads
+        ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa mkdir ${outputFolder}fastp_outputs/gwa_report
+        ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${fastp_path} -w ${threads} -i ${pathToInputFiles}/gwa_1.fq.gz -I ${pathToInputFiles}/gwa_2.fq.gz -5 -3 -c -o ${outputFolder}trimmed_reads/gwa_1.fq.gz --out2 ${outputFolder}trimmed_reads/gwa_2.fq.gz -j ${outputFolder}fastp_outputs/gwa_report/fastp.json -h ${outputFolder}fastp_outputs/gwa_report/fastp.html
 }
 
 genome_assembly () {
         if ((verbose)); then
                 echo "\nExecuting genome assembly with tool "
         fi
-	mkdir ${outputFolder}/assembled_outputs 
+	mkdir ${outputFolder}assembled_outputs 
         if [ "$genomeAssembler" == "s" ]; then
                 echo "SPAdes"
 		if ((qualityControl)); then
                         if ((verbose)); then
                                 echo "\nStarted genome assembly\n"
                         fi
-                        ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa mkdir ${outputFolder}/gwa_output
+                        ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa mkdir ${outputFolder}gwa_output
                         if ((kmersize)); then
-				ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${spadesPath} -1 ${outputFolder}/trimmed_reads/gwa_1.fq.gz -2 ${outputFolder}/trimmed_reads/gwa_2.fq.gz -k $kmersize -t ${threads} -o ${outputFolder}/gwa_output
+				ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${spadesPath} -1 ${outputFolder}trimmed_reads/gwa_1.fq.gz -2 ${outputFolder}trimmed_reads/gwa_2.fq.gz -k $kmersize -t ${threads} -o ${outputFolder}gwa_output
                         else
-				ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${spadesPath} -1 ${outputFolder}/trimmed_reads/gwa_1.fq.gz -2 ${outputFolder}/trimmed_reads/gwa_2.fq.gz -t ${threads} -o ${outputFolder}/gwa_output
+				ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${spadesPath} -1 ${outputFolder}trimmed_reads/gwa_1.fq.gz -2 ${outputFolder}trimmed_reads/gwa_2.fq.gz -t ${threads} -o ${outputFolder}gwa_output
 			fi
-			rm -r ${pathToInputFiles}/trimmed_reads
+			rm -r ${pathToInputFiles}trimmed_reads
                         for v in `ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw`
                         do
-                                cp ${outputFolder}/${v}_output/contigs.fasta ${outputFolder}/assembled_outputs/${v}_assembled.fasta
-				cp ${outputFolder}/fastp_outputs/${v}_report/fastp.html ${outputFolder}/${v}_fastp_report.html 
-                                rm -r ${outputFolder}/${v}_output
+                                cp ${outputFolder}${v}_output/contigs.fasta ${outputFolder}assembled_outputs/${v}_assembled.fasta
+				cp ${outputFolder}fastp_outputs/${v}_report/fastp.html ${outputFolder}${v}_fastp_report.html 
+                                rm -r ${outputFolder}${v}_output
                         done
-			rm -r ${outputFolder}/fastp_outputs/
+			rm -r ${outputFolder}fastp_outputs/
                 else
                         if ((verbose)); then
                                 echo "\nStarted genome assembly\n"
                         fi
 
-                        ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa mkdir ${outputFolder}/gwa_output
+                        ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa mkdir ${outputFolder}gwa_output
 			if ((kmersize)); then
-                        	ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${spadesPath} -1 ${pathToInputFiles}/gwa_1.fq.gz -2 ${pathToInputFiles}/gwa_2.fq.gz -k $kmersize -t ${threads} -o ${outputFolder}/gwa_output
+                        	ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${spadesPath} -1 ${pathToInputFiles}/gwa_1.fq.gz -2 ${pathToInputFiles}/gwa_2.fq.gz -k $kmersize -t ${threads} -o ${outputFolder}gwa_output
 			else
-				ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${spadesPath} -1 ${pathToInputFiles}/gwa_1.fq.gz -2 ${pathToInputFiles}/gwa_2.fq.gz -t ${threads} -o ${outputFolder}/gwa_output
+				ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${spadesPath} -1 ${pathToInputFiles}/gwa_1.fq.gz -2 ${pathToInputFiles}/gwa_2.fq.gz -t ${threads} -o ${outputFolder}gwa_output
 			fi
-			rm -r ${pathToInputFiles}/trimmed_reads
+			rm -r ${pathToInputFiles}trimmed_reads
                         for v in `ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw`
                         do
-                                cp ${outputFolder}/${v}_output/contigs.fasta ${outputFolder}/assembled_outputs/${v}_assembled.fasta
-				rm -r ${outputFolder}/${v}_output
+                                cp ${outputFolder}${v}_output/contigs.fasta ${outputFolder}assembled_outputs/${v}_assembled.fasta
+				rm -r ${outputFolder}${v}_output
                         done
                 fi
 
@@ -151,36 +151,36 @@ genome_assembly () {
                         if ((verbose)); then
                                 echo "\nStarted genome assembly\n"
                         fi
-			ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa mkdir ${outputFolder}/gwa_output
+			ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa mkdir ${outputFolder}gwa_output
 			if ((kmersize)); then
-				ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${unicyclerPath} -1 ${outputFolder}/trimmed_reads/gwa_1.fq.gz -2 ${outputFolder}/trimmed_reads/gwa_2.fq.gz --kmer_count $kmersize -t ${threads} -o ${outputFolder}/gwa_output
+				ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${unicyclerPath} -1 ${outputFolder}trimmed_reads/gwa_1.fq.gz -2 ${outputFolder}trimmed_reads/gwa_2.fq.gz --kmer_count $kmersize -t ${threads} -o ${outputFolder}gwa_output
 			else
-				ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${unicyclerPath} -1 ${outputFolder}/trimmed_reads/gwa_1.fq.gz -2 ${outputFolder}/trimmed_reads/gwa_2.fq.gz -t ${threads} -o ${outputFolder}/gwa_output
+				ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${unicyclerPath} -1 ${outputFolder}trimmed_reads/gwa_1.fq.gz -2 ${outputFolder}trimmed_reads/gwa_2.fq.gz -t ${threads} -o ${outputFolder}gwa_output
 			fi
-			rm -r ${pathToInputFiles}/trimmed_reads
+			rm -r ${pathToInputFiles}trimmed_reads
 			for v in `ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw`
 			do
-        			cp ${outputFolder}/${v}_output/assembly.fasta ${outputFolder}/assembled_outputs/${v}_assembled.fasta
-        			cp ${outputFolder}/fastp_outputs/${v}_report/fastp.html ${outputFolder}/${v}_fastp_report.html
-				rm -r ${outputFolder}/${v}_output
+        			cp ${outputFolder}${v}_output/assembly.fasta ${outputFolder}assembled_outputs/${v}_assembled.fasta
+        			cp ${outputFolder}fastp_outputs/${v}_report/fastp.html ${outputFolder}${v}_fastp_report.html
+				rm -r ${outputFolder}${v}_output
 			done
-			rm -r ${outputFolder}/fastp_outputs/
+			rm -r ${outputFolder}fastp_outputs/
                 else
                         if ((verbose)); then
                                 echo "\nStarted genome assembly\n"
                         fi
 			
-			ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa mkdir ${outputFolder}/gwa_output
+			ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa mkdir ${outputFolder}gwa_output
 			if ((kmersize)); then
-				ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${unicyclerPath} -1 ${pathToInputFiles}/gwa_1.fq.gz -2 ${pathToInputFiles}/gwa_2.fq.gz --kmer_count $kmersize -t ${threads} -o ${outputFolder}/gwa_output
+				ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${unicyclerPath} -1 ${pathToInputFiles}/gwa_1.fq.gz -2 ${pathToInputFiles}/gwa_2.fq.gz --kmer_count $kmersize -t ${threads} -o ${outputFolder}gwa_output
 			else
-				ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${unicyclerPath} -1 ${pathToInputFiles}/gwa_1.fq.gz -2 ${pathToInputFiles}/gwa_2.fq.gz -t ${threads} -o ${outputFolder}/gwa_output
+				ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw | xargs -I gwa ${unicyclerPath} -1 ${pathToInputFiles}/gwa_1.fq.gz -2 ${pathToInputFiles}/gwa_2.fq.gz -t ${threads} -o ${outputFolder}gwa_output
 			fi
-			rm -r ${pathToInputFiles}/trimmed_reads
+			rm -r ${pathToInputFiles}trimmed_reads
 			for v in `ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw`
 			do
-        			cp ${outputFolder}/${v}_output/assembly.fasta ${outputFolder}/assembled_outputs/${v}_assembled.fasta
-        			rm -r ${outputFolder}/${v}_output
+        			cp ${outputFolder}${v}_output/assembly.fasta ${outputFolder}assembled_outputs/${v}_assembled.fasta
+        			rm -r ${outputFolder}${v}_output
 			done
                 fi
         else

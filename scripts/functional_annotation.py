@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/projects/VirtualHost/predicta/html/miniconda3/bin/python3.7
 
 ##############################################################################################################################################################
 
@@ -9,11 +9,12 @@
 import sys
 from optparse import OptionParser
 import os
+import glob
 import tempfile
 import subprocess
 
 def perform_clustering(path, files, prot_or_nucl, identity, tool, outpath):
-	fh = open(outpath + "/combined_labelled_fasta.fna", "w")	
+	fh = open(outpath + "combined_labelled_fasta.fna", "w")	
 	for i in files:
 		reader = open(path+"/"+i, "r")
 		
@@ -28,7 +29,7 @@ def perform_clustering(path, files, prot_or_nucl, identity, tool, outpath):
 	fh.close()
 	#command on the server
 	#clustering-tools/usearch11.0.667_i86linux32 -cluster_fast temp/combined_labelled_fasta.fna -id 0.7 -centroids temp/our_centroids.fa -uc temp/labeled_seqs.fa
-	cmd = [tool, "-cluster_fast", outpath+"/combined_labelled_fasta.fna", "-id", str(identity), "-centroids", outpath+"/our_centroids.fa", "-uc", outpath+"/labeled_seqs.fa"]
+	cmd = [tool, "-cluster_fast", outpath+"combined_labelled_fasta.fna", "-id", str(identity), "-centroids", outpath+"our_centroids.fa", "-uc", outpath+"labeled_seqs.fa"]
 	subprocess.call(cmd)
 
 def do_interproscan(tool, centroids, outputPath):
@@ -52,7 +53,7 @@ def do_deeparg(tool,seqtype,centroids,outputPath):
 		print("Centroids fasta file doesn't exist")
 
 def do_eggnog(tool,centroids,outputPath):
-	if os.path.exists(centroiids):
+	if os.path.exists(centroids):
 		#env= ["conda","activate","python2.7"]
 		cmd= [tool, "-i", centroids, "--output", "our_centroids", "-m", "diamond", "-d", "bact", "-o", outputPath]
 		#subprocess.call(env)
@@ -60,52 +61,56 @@ def do_eggnog(tool,centroids,outputPath):
 	else:
 		print("Centroids fasta file doesn't exist")
 		
-def do_signalP5(tool, outputPath):
+def do_signalP5(tool, path_to_gpresults, outputPath):
 	
 	#Note: If the tool is not on your path, it needs to be run from the directory where the executable script for the tool is present
 	# the variable tool should contain the path to where the executable file is.
 
 	#getting a list of input(.faa) files:
-	path_to_gpresults = "/home/projects/group-a/Team1-GenePrediction/results/dfast_results/" #path to the gene prediction results directory
-	input_files_command = 'ls '+ path_to_gpresults + '*.faa'
-	input_files = subprocess.check_output(input_files_command,shell=True)
-	input_files = input_files.split('\n')
+	#path_to_gpresults = "/home/projects/group-a/Team1-GenePrediction/results/dfast_results/" #path to the gene prediction results directory
+	fpath = path_to_gpresults + '*.faa'
+        #input_files = glob.glob(fpath)
+	input_files = glob.glob(fpath)
+        #input_files = input_files.split('\n')
+        #input_files = glob.glob(fpath)
+        #print("Running SignalP ...")
 
-	print("Running SignalP ...")
-
-	change_dir = ["cd",tool]
-	subprocess.call(change_dir)
-
+	#change_dir = ["cd",tool]
+	#subprocess.call(change_dir)
+        #import pdb; pdb.set_trace()
 	for file_name in input_files:
-		output_file = outputPath+"/signalp_"+file_name.split("/")[-1].replace(".faa","")
-		sp5_command = "signalp -fasta "+file_name+" -org gram- -format short -prefix "+output_file+" -gff3"
-    		subprocess.call(sp5_command.split())
+            output_file = outputPath+"/signalp_"+file_name.split("/")[-1].replace(".faa","")
+            sp5_command = [tool, "-fasta", file_name, "-org", "gram-", "-format",  "short", "-gff3", '-tmp', outputPath + '/']
+            subprocess.check_output(sp5_command)
 
 	print("Finished predicting signal peptides!")
 	
 
-def do_TMHMM(tool, outputPath):
+def do_TMHMM(tool, path_to_gpresults, outputPath):
 	
 	#Note: If the tool is not on your path, it needs to be run from the directory where the executable script for the tool is present
 	#the variable tool should contain the path to where the executable file is.
 
 	#getting a list of input(.faa) files:
-	path_to_gpresults = "/home/projects/group-a/Team1-GenePrediction/results/dfast_results/" #path to the gene prediction results directory
-	input_files_command = 'ls '+ path_to_gpresults + '*.faa'
-	input_files = subprocess.check_output(input_files_command,shell=True)
-	input_files = input_files.split('\n')
+	#path_to_gpresults = "/home/projects/group-a/Team1-GenePrediction/results/dfast_results/" #path to the gene prediction results directory
+	fpath = path_to_gpresults + '*.faa'
+	input_files = glob.glob(fpath)
+	#input_files = input_files.split('\n')
 
-	change_dir = ["cd",tool]
-	subprocess.call(change_dir)
+	#hange_dir = ["cd",tool]
+	#subprocess.call(change_dir)
 
 	print("Running TMHMM...")
 
 	for file_name in input_files:
-		output_file = outputPath+"/tmhmm_"+file_name.split("/")[-1].replace(".faa","")
-		tmhmm_command = "tmhmm "+file_name+" | tee "+output_file+".gff3"
-	   	os.system(tmhmm_command)
+            output_file = outputPath+"/tmhmm_"+file_name.split("/")[-1].replace(".faa","")
+            tmhmm_command = (tool, "-f", file_name, "-m", "/projects/VirtualHost/predicta/html/miniconda3/pkgs/tmhmm.py-1.1-py35h58e5166_0/TMHMM2.0.model")#, "|", "tee", output_file + ".gff3"]
+            ps = subprocess.Popen(tmhmm_command, stdout=subprocess.PIPE)
+            output = subprocess.check_output(("tee", output_file + ".gff"), stdin=ps.stdout)
+            #ps.wait()
 
-def do_pilercr(outputPath):
+
+def do_pilercr(path_to_input, outputPath):
 	### Note:
 	### PilerCR has to be in the path
 	### path = /home/projects/group-a/functional_annotation/ab-initio_tools/pilercr/pilercr1.06/pilercr
@@ -115,27 +120,26 @@ def do_pilercr(outputPath):
 	########################
 
 	### This portion captures the assembled isolate genome fasta files in a list
-	pathToGenomeAssemblyResults = '/home/projects/group-a/Team1-GenomeAssembly/assembled_output/'
-	command = 'ls '+ pathToGenomeAssemblyResults + '*CGT*'
-	isolateList = subprocess.check_output(command,shell=True)
-	isolateList = isolateList.split('\n')
+	#athToGenomeAssemblyResults = '/home/projects/group-a/Team1-GenomeAssembly/assembled_output/'
+	#ommand = 'ls '+ pathToGenomeAssemblyResults + '*CGT*'
+	#isolateList = subprocess.check_output(command,shell=True)
+	#isolateList = isolateList.split('\n')
 	########################
 
 	### This portion runs PilerCR on every isolate file,
 	### and places the output file in the given PilerCR directory
+	isolateList = glob.glob(path_to_input.replace('amino_acids', 'assembled_outputs') +'*.fasta')
 	for isolateFile in isolateList:
 		if isolateFile != '':
 			isolateFileName = isolateFile.split('/')
 			isolateFileName = isolateFileName[6].split('_')[0]
-			command = 'pilercr -in ' + isolateFile + ' -out ' + PilerCR_results_path + isolateFileName + '_pilercrResults.out -noinfo -quiet'
+			command = 'pilercr -in ' + isolateFile + ' -out ' + outputPath + isolateFileName + '_pilercrResults.out -noinfo -quiet'
 			print(command)
 			subprocess.call(command,shell=True)
 	########################
 
-	### This part captures all the PilerCR output files in a list
-	command = 'ls '+PilerCR_results_path + '*pilercrResults.out*'
-	pilercrFiles = subprocess.check_output(command,shell=True)
-	pilercrFiles = pilercrFiles.split('\n')
+	### This part captures all the PilerCR output files in 
+	pilercrFiles = glob.glob(outputPath + "*_pilercrResults*")
 	########################
 
 	### This part takes the information from the PilerCR output files,
@@ -144,7 +148,7 @@ def do_pilercr(outputPath):
 		if pilercrOutput != '':
 			pilerCRName = pilercrOutput.split('/')[7].split('_')[0]
 			handle = open(pilercrOutput,'r')
-			newHandle = open(PilerCR_results_path+pilerCRName+'_pilercrResults.gff','w')
+			newHandle = open(outputPath+pilerCRName+'_pilercrResults.gff','w')
 			newHandle.write('##gff-version 3\n')
 			switch = False
 			info = []
@@ -188,7 +192,7 @@ def do_pilercr(outputPath):
 
 	### This part removes the original PilerCR output files,
 	###     and leaves only the gff files
-	command = 'rm '+PilerCR_results_path + '*pilercrResults.out*'
+	command = 'rm '+ outputPath + '*pilercrResults.out*'
 	subprocess.call(command,shell=True)
 	########################
 
@@ -205,14 +209,14 @@ def opts():
 	parser.add_option("-i", "--identity", default = 0.7, dest="clust_id", help = "clustering identity")
 	parser.add_option("-f", "--files", dest="files", help = "protein sequences directory")
 	#parser.add_option("-p", "--protein", action='store_true', dest="prot", help = "use this if seqs are protein")
-	parser.add_option("-u", "--usearch", dest="usearch_loc", help = "usearch absolute path")
+	parser.add_option("-u", "--usearch", dest="usearch_loc", help = "usearch absolute path", default=None)
 	parser.add_option("-o", "--output", default = "temp", dest="outpath", help = "output_file_path")
-	parser.add_option("-s", "--interproscan", dest="ips", help = "interproscan absolute path")
-	parser.add_option("-d", "--deeparg", dest="deeparg", help = "deeparg absolute path")
-	parser.add_option("-e", "--eggnog", dest="eggnog", help = "eggnog absolute path")
-	parser.add_option("-p", "--signalp", dest="sigp", help = "signalP absolute path")
-	parser.add_option("-t", "--tmhmm", dest="tm", help = "tmhmm absolute path")
-	parser.add_option("-r", "--pilercr",dest="pilercr",help='pilercr output path, must end in "/" ')
+	parser.add_option("-s", "--interproscan", dest="ips", help = "interproscan absolute path", default=None)
+	parser.add_option("-d", "--deeparg", dest="deeparg", help = "deeparg absolute path", default=None)
+	parser.add_option("-e", "--eggnog", dest="eggnog", help = "eggnog absolute path", default=None)
+	parser.add_option("-p", "--signalp", dest="sigp", help = "Run Signalp", default=None)
+	parser.add_option ("-t", "--tmhmm", dest="tmhmm", help="tmhmm absolute path", default=None)
+	parser.add_option("-r", "--pilercr",dest="pilercr",help='pilercr output path, must end in "/" ', default=None)
 	
 
 	return(parser.parse_args())
@@ -220,7 +224,7 @@ def opts():
 #Main should be at bottom.
 def main():
 	options, args = opts()
-        import pdb; pdb.set_trace()	
+        #import pdb; pdb.set_trace()	
 	file_path = options.files
 	
 	clust_identity = options.clust_id
@@ -228,17 +232,16 @@ def main():
 	is_protein = True
 	
 	input_files = os.listdir(file_path)
-	
-	usearch = options.usearch_loc
+	usearch = options.usearch_loc	
 	interpro = options.ips
 	deeparg = options.deeparg
 	eggnog = options.eggnog
 	pilercrOutputPath = options.pilercr
-	sigP = options.sigp
+	#sigP = options.sigp
 
-	print(sigP)
+	#print(sigP)
 	
-	tm = options.tm
+	#tm = options.tm
 	
 	out = options.outpath
 	
@@ -246,8 +249,9 @@ def main():
 	if not os.path.exists(out):
 		os.makedirs(out)
 		
-	homology_root = out+"/homology"
-	initio_root = out+"/initio"
+	homology_root = out+"homology"
+        #import pdb; pdb.set_trace()
+	initio_root = out+"initio"
 	
 	deeparg_dir = homology_root + "/deeparg/"
 	interpro_dir = homology_root + "/interpro/"
@@ -277,17 +281,22 @@ def main():
 	else:
 		print("Clustering nucleotides...")
 		perform_clustering(file_path, input_files, is_protein, clust_identity, usearch, out)
-        import pdb; pdb.set_trace()		
+        #import pdb; pdb.set_trace()		
 	centroids_loc = out+"our_centroids.fa"
 	
 	
-	
-	do_signalP5(sigP, initio_root)
-	do_TMHMM(tm, initio_root)
-	do_pilercr(pilercrOutputPath)
-	do_interproscan(interpro, centroids_loc, interpro_dir)
-	do_deeparg(deeparg, "prot", centroids_loc, deeparg_dir+"our_centroids.fa.out")
-	do_eggnog(eggnog, centroids_loc, eggnog_dir)
+	if not options.sigp is None:
+	   do_signalP5(options.sigp, file_path, initio_root)
+	#if not options.tmhmm is None:
+	#    do_TMHMM(options.tmhmm, file_path, initio_root)
+	if not options.pilercr is None:
+	    do_pilercr(file_path, initio_root)
+	if not options.ips is None:
+	    do_interproscan(interpro, centroids_loc, interpro_dir)
+	if not options.deeparg is None:
+	    do_deeparg(deeparg, "prot", centroids_loc, deeparg_dir+"our_centroids.fa.out")
+	if not options.eggnog is None:
+	    do_eggnog(eggnog, centroids_loc, eggnog_dir)
 	
 	
 #Just runs main.

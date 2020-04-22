@@ -43,7 +43,7 @@ mkdir ${outputFolder}/quast_output
 for name in `ls ${pathToInputFiles} | grep _1.fq.gz | xargs -I gw basename -s _1.fq.gz gw` 
 do 
 	varn+=" ${name}"
-	varf+=" ${outputFolder}/${name}_assembled.fasta"
+	varf+=" ${outputFolder}/assembled_outputs/${name}_assembled.fasta"
 done
 
 varn=`echo $varn | tr ' ' ', '`

@@ -38,10 +38,9 @@ class Pipeline:
         self.gene_prediction = None
         self.functional_annotation = None
         self.comparative_genomics = None
-        #import pdb; pdb.set_trace()
         # run assembling
         if self.assembly_parameters['assemble']:
-            self.assembly = self.run_genome_assembly()
+           self.assembly = self.run_genome_assembly()
 
         # run gene prediction
         if self.gene_prediction_parameters['predict_genes']:
@@ -50,7 +49,6 @@ class Pipeline:
             else:
                 input_path = self.tmp_folder + 'assembled_outputs/'
             self.gene_prediction = self.run_gene_prediction(input_path)
-
         # run functional annotation
         if self.functional_annotation_parameters['functional_annotation']:
             if self.gene_prediction is None:
@@ -113,7 +111,6 @@ class Pipeline:
         for l in assembled_files:
             input_dir = [f"{cwd}scripts/run_dfast.sh", "-i",\
                          l, "-o", self.tmp_folder +'/', "-v" ] + options
-            import pdb; pdb.set_trace()
             output = subprocess.check_output(input_dir)
             log_file.write(str(output))
         log_file.close()
@@ -125,22 +122,22 @@ class Pipeline:
         options.append('-u')
         options.append('usearch11.0.667_i86linux32')
         if self.functional_annotation_parameters['eggnog']:
-            options.append('-e')
-            options.append('emapper.py')
+            options.append("-e")
+            options.append("/projects/VirtualHost/predicta/html/Team1-WebServer/tools/eggnog-mapper/emapper.py")
         if self.functional_annotation_parameters['signalp']:
-            options.append('-p')
-            options.append('signalp')
+            options.append("-p")
+            options.append("signalp")
         if self.functional_annotation_parameters['tmhmm']:
-             options.append('-t')
-             options.append('tmhmm')
-        if self.functional_annotation_parameters['interpro']:
-             options.append('-s')
-             options.append('interproscan.sh')
+             options.append("-t")
+             options.append("tmhmm")
+        if self.functional_annotation_parameters["interpro"]:
+             options.append("-s")
+             options.append("interproscan.sh")
         if self.functional_annotation_parameters['deeparg']:
-             options.append('-d')
-             options.append('/projects/VirtualHost/predicta/html/Team1-WebServer/tools/deeparg-ss/deepARG.py')
+             options.append("-d")
+             options.append("/projects/VirtualHost/predicta/html/Team1-WebServer/tools/deeparg-ss/deepARG.py")
 
-        cmd  = [f"{cwd}scripts/functional_annotation.py", "-f", input_path, '-o', self.tmp_folder] + options
+        cmd  = [f"{cwd}scripts/functional_annotation.py", "-f", input_path, "-o", self.tmp_folder] + options
         output = subprocess.check_output(cmd)
         log_file.write(str(output))
         log_file.close()
@@ -148,7 +145,6 @@ class Pipeline:
 
     def run_comparative_genomics(self, input_path):
         log_file = open(f'{self.tmp_folder}/comparativeGenomicsLog.txt', 'w+')
-        import pdb; pdb.set_trace()
         cmd = [f"{cwd}scripts/cg_pipeline.py", '-i', input_path, '-o', self.tmp_folder, '-c', '8', '-t', self.comparative_genomics_parameters['tools']]
         output = subprocess.check_output(cmd)
         log_file.write(str(output))
@@ -266,7 +262,8 @@ def start_to_end(argv):
     global cwd
     cwd = os.getcwd() + '/'
     # create tmp dir in cwd
-    current_tmp_dir = '/projects/VirtualHost/predicta/html/Team1-WebServer/07qa0i38/'
+    #current_tmp_dir = tempfile.mkdtemp(prefix=cwd + 'analysis/')
+    current_tmp_dir = '/projects/VirtualHost/predicta/html/Team1-WebServer/analysis/xgn_dsdc/'
     #subprocess.call(["python", "./preinstall.py"])
     pipeline = Pipeline(current_tmp_dir, input_path, epidata,
                         assembly_parameters,
