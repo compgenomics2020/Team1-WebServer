@@ -262,8 +262,8 @@ def start_to_end(argv):
     global cwd
     cwd = os.getcwd() + '/'
     # create tmp dir in cwd
-    #current_tmp_dir = tempfile.mkdtemp(prefix=cwd + 'analysis/')
-    current_tmp_dir = '/projects/VirtualHost/predicta/html/Team1-WebServer/analysis/xgn_dsdc/'
+    current_tmp_dir = tempfile.mkdtemp(prefix=cwd + 'analysis/')
+    #current_tmp_dir = '/projects/VirtualHost/predicta/html/Team1-WebServer/analysis/xgn_dsdc/'
     #subprocess.call(["python", "./preinstall.py"])
     pipeline = Pipeline(current_tmp_dir, input_path, epidata,
                         assembly_parameters,
